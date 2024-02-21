@@ -1,0 +1,89 @@
+<title>Arkanold en JavaScript</title>
+<style>
+  body {
+    background-color: #111;
+  }
+  canvas {
+    border: 4px solid #fff;
+    border-bottom: transparent;
+    background: #000;
+    margin: 0 auto;
+    display: block;
+  }
+</style>
+
+<!-- esta etiqueta "<canvas>" es el Lienzo para dibujar encima  -->
+<canvas></canvas>
+
+<script>
+  // paso 1: recuperar el canvas y el contexto
+  const canvas = document.querySelector("canvas");
+
+  // recuperar el contexto del canvas es como decirle COMO QUEREMOS DIBUJAR en esste casoen 2D
+  const contexto = canvas.getContext("2d");
+
+  canvas.width = 448;
+  canvas.height = 400;
+
+  // variables de nuestro juego
+  let contador = 0;
+
+  // VARIABLES DE LA PELOTA
+  // pensaremos primero en el tamaño
+  const ballRadius = 4;
+  // despues su posicion con clas cordenadas arriba es 0 hasta abajo 400
+  let x = canvas.width / 2;
+  let y = canvas.height - 30;
+  // velocidad de la pelota indicada con la direccion neceitamos direccion vertical y hrizontal
+  let dx = 2;
+  let dy = -2;
+
+  //  despues de obtener mis funciones de dibujo y antes de empezar a dibjura empieza a crear las bariables de nuestros objetos como el de la pelota y despues volvemos a los dibujos
+  function drawbBall() {
+    // dibujar la pelota, empieza un trazado con beginPath() y termina con closePath()
+    contexto.beginPath();
+    // dibujamos un arco con arc(x, y, radio, angulo de inicio "0", angulo final pi x2 y eso nos hace un circulo perfecto redodndo)
+    contexto.arc(x, y, ballRadius, 0, Math.PI * 2);
+    contexto.fillStyle = "#fff";
+    // rellenar el trazado
+    contexto.fill();
+    // siempre cerrar el trazado
+    contexto.closePath();
+  }
+
+  function drawPaddle() {}
+  function drawBricks() {}
+
+  function ballMovement() {
+    x += dx;
+    y += dy;
+  }
+  function paddleMovement() {}
+  function collisionDetection() {
+    
+  }
+
+//   si no creamos las coliciones veremes que la pelotita desaparece por que se va de la pnatalla no chcoo 
+  function limpiarCanvas(){
+    // limpiar el canvas para que no se vea la pelota moviendose por toda la pantalla 
+    contexto.clearReact(0,0,canvas.width,canvas.height)
+  }
+
+  //loop infinito "sincronizar en el refresco de la`pantalla con el refresco del navegador" requestAnimationFrmae y empezar a DIBUJAR
+  function draw() {
+
+    limpiarCanvas()
+    //hayq ue dibujar los elementos del juego
+
+    drawbBall();
+    drawPaddle();
+    drawBricks();
+
+    // dibujar coliciones y movimientos
+    collisionDetection();
+    ballMovement();
+    paddleMovement();
+    window.requestAnimationFrame(draw);
+  }
+  draw();
+</script>
