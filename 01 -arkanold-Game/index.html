@@ -28,14 +28,18 @@
   // variables de nuestro juego
   let contador = 0;
 
+  // PELOTA
+  //-----------------------------------------------------------------
+
   // VARIABLES DE LA PELOTA
   // pensaremos primero en el tamaño
   const ballRadius = 4;
+
   // despues su posicion con clas cordenadas arriba es 0 hasta abajo 400
   let x = canvas.width / 2;
   let y = canvas.height - 30;
   // velocidad de la pelota indicada con la direccion neceitamos direccion vertical y hrizontal
-  let dx = 2;
+  let dx = 8;
   let dy = -2;
 
   //  despues de obtener mis funciones de dibujo y antes de empezar a dibjura empieza a crear las bariables de nuestros objetos como el de la pelota y despues volvemos a los dibujos
@@ -51,30 +55,92 @@
     contexto.closePath();
   }
 
-  function drawPaddle() {}
+  //PADDLE
+  //-----------------------------------------------------------------
+  //VARIABLES de la paleta
+  const paddlelHeight = 10;
+  const paddleWidth = 190;
+
+  // POSICION de la paleta
+  let paddelX = (canvas.width - paddleWidth) / 2;
+  let paddleY = canvas.height - paddlelHeight - 20;
+  let presionandoDerecha = false;
+  let presionandoIzquierda = false;
+
+  function drawPaddle() {
+    contexto.fillStyle = "#09f";
+    //con este fillRect( dibujamos donde empezamos a dibujar en que ejes ?y de que dimenciones es el objeto ancho alto )
+    contexto.fillRect(
+      paddelX, // la cordenada x
+      paddleY, // la cordenada y
+      paddleWidth, // el ancho del dibujo
+      paddlelHeight // el alto del dibujo
+    );
+  }
   function drawBricks() {}
 
+  function collisionDetection() {}
   function ballMovement() {
+    // coliciones laterales
+    if (
+      x + dx > canvas.width ||
+      x + dx < 0 //miramos su possion "x" + su direccion "dx" si la direccion exede el ancho y la direccion es menor a 0 en este caso mas precicion ballRadius {esa direccion cambiala de sentido "dx = -dx"} "EL REBOTE"
+    ) {
+      dx = -dx;
+    }
+    // para la colicion de arriba es un poco similar
+    if (y + dy < 0) {
+      dy = -dy;
+    }
+    // este es el game over y el refrescar el juego
+    if (y + dy > canvas.height - 0) {
+      console.log("Game Over");
+      document.location.reload();
+    }
+
+    //asigna el movimiento
     x += dx;
     y += dy;
   }
-  function paddleMovement() {}
-  function collisionDetection() {
-    
+  function paddleMovement() {
+    if(presionandoDerecha ){
+      paddelX += 5
+    }else if(presionandoIzquierda){
+      paddelX += -5
+    }
+  }
+  function cleanCanvas() {
+    contexto.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-//   si no creamos las coliciones veremes que la pelotita desaparece por que se va de la pnatalla no chcoo 
-  function limpiarCanvas(){
-    // limpiar el canvas para que no se vea la pelota moviendose por toda la pantalla 
-    contexto.clearReact(0,0,canvas.width,canvas.height)
+  // creando eventos eschuchando LAS TECLAS PRESIONDAS
+  function initEvents() {
+    document.addEventListener("keydown", keyDownHandler);
+    document.addEventListener("keyup", keyUpHandler);
+
+    function keyDownHandler(event) {
+      const { key } = event;
+      if (key === "Right" || key === "ArrowRight") {
+        presionandoDerecha = true;
+      } else if (key === "Left" || key === "ArrowLeft") {
+        presionandoIzquierda = true;
+      }
+    }
+    function keyUpHandler(event) {
+      const { key } = event;
+      if (key === "Right" || key === "ArrowRight") {
+        presionandoDerecha = false;
+      } else if (key === "Left" || key === "ArrowLeft") {
+        presionandoIzquierda = false;
+      }
+    }
   }
 
   //loop infinito "sincronizar en el refresco de la`pantalla con el refresco del navegador" requestAnimationFrmae y empezar a DIBUJAR
   function draw() {
-
-    limpiarCanvas()
+    console.log({presionandoDerecha, presionandoIzquierda});
+    cleanCanvas();
     //hayq ue dibujar los elementos del juego
-
     drawbBall();
     drawPaddle();
     drawBricks();
@@ -86,4 +152,5 @@
     window.requestAnimationFrame(draw);
   }
   draw();
+  initEvents();
 </script>
