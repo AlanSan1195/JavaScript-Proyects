@@ -6,7 +6,7 @@
   canvas {
     border: 4px solid #fff;
     border-bottom: transparent;
-    background: #000;
+    background: url("bkg.png") repeat;
     margin: 0 auto;
     display: block;
   }
@@ -15,18 +15,25 @@
 <!-- esta etiqueta "<canvas>" es el Lienzo para dibujar encima  -->
 <canvas></canvas>
 
+<img hidden id="sprite" src="./sprite.png" alt="Sprite Arakanold">
+<img hidden id="bricks" src="./bricks.png" alt="Sprite Bricks Arakanold">
+
 <script>
+
   // paso 1: recuperar el canvas y el contexto
   const canvas = document.querySelector("canvas");
-
+  
   // recuperar el contexto del canvas es como decirle COMO QUEREMOS DIBUJAR en esste casoen 2D
   const contexto = canvas.getContext("2d");
-
+  
+  const $sprite = document.querySelector("#sprite")
+  const $bricks = document.querySelector("#bricks")
+  
   canvas.width = 448;
   canvas.height = 400;
 
   // variables de nuestro juego
-  let contador = 0;
+
 
   // PELOTA
   //-----------------------------------------------------------------
@@ -59,7 +66,7 @@
   //-----------------------------------------------------------------
   //VARIABLES de la paleta
   const paddlelHeight = 10;
-  const paddleWidth = 190;
+  const paddleWidth = 55;
 
   // POSICION de la paleta
   let paddelX = (canvas.width - paddleWidth) / 2;
@@ -68,18 +75,58 @@
   let presionandoIzquierda = false;
 
   function drawPaddle() {
-    contexto.fillStyle = "#09f";
-    //con este fillRect( dibujamos donde empezamos a dibujar en que ejes ?y de que dimenciones es el objeto ancho alto )
-    contexto.fillRect(
-      paddelX, // la cordenada x
-      paddleY, // la cordenada y
-      paddleWidth, // el ancho del dibujo
-      paddlelHeight // el alto del dibujo
-    );
+    // contexto.fillStyle = "red";
+    // //con este fillRect( dibujamos donde empezamos a dibujar en que ejes ?y de que dimenciones es el objeto ancho alto )
+    // contexto.fillRect(
+    // paddelX, // la cordenada x
+    //   paddleY, // la cordenada y
+    //   paddleWidth, // el ancho del dibujo
+    //   paddlelHeight // el alto del dibujo
+    //);
+    
+    //dibujamos una imagen 
+    contexto.drawImage(
+      $sprite, // le pasamos la imagen
+      30, // cordenada de ancho 
+      175, // cordenadas del largo (desde el finder revisarlo)
+      paddleWidth, // tamaño de recorte
+      paddlelHeight, // tamaño de recorte
+      paddelX, // posicion X del dibujo
+      paddleY, // posicion Y del dibujo 
+      90, // largo de la imagen // ya podemos modificar nuestro paddelWhidth o dibujarlo con la medida del paddelwidth
+      15, // ancho de la imagen
+    )
+    
+  
+    
   }
+
+  //--------------- VARIABLES BRICKS //------------
+  const bricksRowCoun = 6;
+  const bricksColumnCount = 13;
+  const brickWidth = 25;
+  const brickHeigth = 12;
+  const bricksPadding = 2;
+  const bricksTopPadding = 80;
+  const bricksLeftPadding = 20;
+  const bricks =[];
+  for(let c = 0; c < bricksColumnCount; c++){
+    bricks[c]= []; // inicializamos con un array vacio
+    for( let r = 0; r < bricksRowCoun; r++){
+      // claculamos la posicion de cada ladrillo en la pantalla
+       const bricksX = (c * (brickWidth + bricksPadding)) + bricksLeftPadding;
+       const bricksY = (r * (brickHeigth + bricksPadding)) + bricksTopPadding;
+       // Asignar un color aleatorio a cada ladrillo
+  }
+}
+
+
   function drawBricks() {}
 
   function collisionDetection() {}
+
+
+
   function ballMovement() {
     // coliciones laterales
     if (
@@ -92,20 +139,31 @@
     if (y + dy < 0) {
       dy = -dy;
     }
-    // este es el game over y el refrescar el juego
-    if (y + dy > canvas.height - 0) {
+    //la pelota toca la pala
+    // aqui lo que tenemos que hacer es ver la distancia de la pala para decirle que SOLO PUEDE REBOTAR en el rango de la pala no fuera de ella y en la posicion done este la pala no antes no despues 
+    const pelotaEnEjeX = x > paddelX && x < paddelX + paddleWidth
+    const pelotaTocandoPala = y + dy > paddleY
+
+
+    if(pelotaEnEjeX && pelotaTocandoPala){
+      dy = -dy
+      
+    }else if (y + dy > canvas.height - 0) {
       console.log("Game Over");
       document.location.reload();
     }
 
+    // este es el game over y el refrescar el juego
+    
     //asigna el movimiento
     x += dx;
     y += dy;
   }
   function paddleMovement() {
-    if(presionandoDerecha ){
+    // si presiopnamos a la derecha Y la posicion de la raqueta es menor al ancho  
+    if(presionandoDerecha && paddelX < canvas.width - paddleWidth ){
       paddelX += 5
-    }else if(presionandoIzquierda){
+    }else if(presionandoIzquierda && paddelX > 0 ){
       paddelX += -5
     }
   }
@@ -117,9 +175,11 @@
   function initEvents() {
     document.addEventListener("keydown", keyDownHandler);
     document.addEventListener("keyup", keyUpHandler);
+    
 
     function keyDownHandler(event) {
       const { key } = event;
+      // auqi las palabras "Rigth" "Left" y demas en comillas son tal cual necesarias para que funcionen las teclas"
       if (key === "Right" || key === "ArrowRight") {
         presionandoDerecha = true;
       } else if (key === "Left" || key === "ArrowLeft") {
