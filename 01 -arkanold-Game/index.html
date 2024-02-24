@@ -15,25 +15,23 @@
 <!-- esta etiqueta "<canvas>" es el Lienzo para dibujar encima  -->
 <canvas></canvas>
 
-<img hidden id="sprite" src="./sprite.png" alt="Sprite Arakanold">
-<img hidden id="bricks" src="./bricks.png" alt="Sprite Bricks Arakanold">
+<img hidden id="sprite" src="./sprite.png" alt="Sprite Arakanold" />
+<img hidden id="bricks" src="./bricks.png" alt="Sprite Bricks Arakanold" />
 
 <script>
-
   // paso 1: recuperar el canvas y el contexto
   const canvas = document.querySelector("canvas");
-  
+
   // recuperar el contexto del canvas es como decirle COMO QUEREMOS DIBUJAR en esste casoen 2D
   const contexto = canvas.getContext("2d");
-  
-  const $sprite = document.querySelector("#sprite")
-  const $bricks = document.querySelector("#bricks")
-  
+
+  const $sprite = document.querySelector("#sprite");
+  const $bricks = document.querySelector("#bricks");
+
   canvas.width = 448;
   canvas.height = 400;
 
   // variables de nuestro juego
-
 
   // PELOTA
   //-----------------------------------------------------------------
@@ -46,7 +44,7 @@
   let x = canvas.width / 2;
   let y = canvas.height - 30;
   // velocidad de la pelota indicada con la direccion neceitamos direccion vertical y hrizontal
-  let dx = 8;
+  let dx = 5;
   let dy = -2;
 
   //  despues de obtener mis funciones de dibujo y antes de empezar a dibjura empieza a crear las bariables de nuestros objetos como el de la pelota y despues volvemos a los dibujos
@@ -83,88 +81,149 @@
     //   paddleWidth, // el ancho del dibujo
     //   paddlelHeight // el alto del dibujo
     //);
-    
-    //dibujamos una imagen 
+
+    //dibujamos una imagen
     contexto.drawImage(
       $sprite, // le pasamos la imagen
-      30, // cordenada de ancho 
+      30, // cordenada de ancho
       175, // cordenadas del largo (desde el finder revisarlo)
       paddleWidth, // tamaño de recorte
       paddlelHeight, // tamaño de recorte
       paddelX, // posicion X del dibujo
-      paddleY, // posicion Y del dibujo 
-      90, // largo de la imagen // ya podemos modificar nuestro paddelWhidth o dibujarlo con la medida del paddelwidth
-      15, // ancho de la imagen
-    )
-    
-  
-    
+      paddleY, // posicion Y del dibujo
+      paddleWidth, // largo de la imagen // ya podemos modificar nuestro paddelWhidth o dibujarlo con la medida del paddelwidth
+      paddlelHeight // ancho de la imagen
+    );
   }
 
   //--------------- VARIABLES BRICKS //------------
-  const bricksRowCoun = 6;
+  const bricksRowCount = 6;
   const bricksColumnCount = 13;
-  const brickWidth = 25;
-  const brickHeigth = 12;
+  const brickWidth = 30;
+  const brickHeigth = 14;
   const bricksPadding = 2;
   const bricksTopPadding = 80;
   const bricksLeftPadding = 20;
-  const bricks =[];
-  for(let c = 0; c < bricksColumnCount; c++){
-    bricks[c]= []; // inicializamos con un array vacio
-    for( let r = 0; r < bricksRowCoun; r++){
+  const bricks = [];
+
+  const BRICKS_STATUS = {
+    ACTIVE: 1,
+    DESTROYED: 0,
+  };
+
+  for (let c = 0; c < bricksColumnCount; c++) {
+    bricks[c] = []; // inicializamos con un array vacio
+    for (let r = 0; r < bricksRowCount; r++) {
       // claculamos la posicion de cada ladrillo en la pantalla
-       const bricksX = (c * (brickWidth + bricksPadding)) + bricksLeftPadding;
-       const bricksY = (r * (brickHeigth + bricksPadding)) + bricksTopPadding;
-       // Asignar un color aleatorio a cada ladrillo
+      const bricksX = c * (brickWidth + bricksPadding) + bricksLeftPadding;
+      const bricksY = r * (brickHeigth + bricksPadding) + bricksTopPadding;
+      // Asignar un color random a cada ladrillo
+      const random = Math.floor(Math.random() * 8);
+      // guardamos la posicion de cada ladrillo
+      bricks[c][r] = {
+        x: bricksX,
+        y: bricksY,
+        status: BRICKS_STATUS.ACTIVE,
+        color: random,
+      };
+    }
   }
-}
+
+  function drawBricks() {
+    for (let c = 0; c < bricksColumnCount; c++) {
+      for (let r = 0; r < bricksRowCount; r++) {
+        const currentBrick = bricks[c][r];
+        if (currentBrick.status === BRICKS_STATUS.DESTROYED) continue;
+
+        // contexto.fillStyle = "red";
+        // contexto.rect(
+        //   currentBrick.x,
+        //   currentBrick.y,
+        //   brickWidth,
+        //   brickHeigth
+        // );
+        // // llamamos al fill para dibujar
+        // contexto.fill();
+        // contexto.stroke()
+
+        // 32 es la medida que sacamos por que eso es lo que mide un brick en la imagen $bricks de 0,32 32,64 y a si
+        const clipX = currentBrick.color * 32;
+
+        contexto.drawImage(
+          $bricks,
+          clipX,
+          0,
+          32,
+          14,
+          currentBrick.x,
+          currentBrick.y,
+          brickWidth,
+          brickHeigth
+        );
+      }
+    }
+  }
+
+  function collisionDetection() {
+    for (let c = 0; c < bricksColumnCount; c++) {
+      for (let r = 0; r < bricksRowCount; r++) {
+        const currentBrick = bricks[c][r];
+        if (currentBrick.status === BRICKS_STATUS.DESTROYED) continue;
+
+        // en la misma poscion de la x del ladrillo
+        const pelotaEnEjeX =
+          x > currentBrick.x && x < currentBrick.x + brickWidth;
+        //superficie de la y
+        const pelotaEnEjeY =
+          y > currentBrick.y && y < currentBrick.y + brickHeigth;
 
 
-  function drawBricks() {}
-
-  function collisionDetection() {}
-
-
+        if (pelotaEnEjeX && pelotaEnEjeY && dy < ballRadius) {
+          dy = -dy;
+          currentBrick.status = BRICKS_STATUS.DESTROYED;
+        }
+      }
+    }
+  }
 
   function ballMovement() {
     // coliciones laterales
     if (
       x + dx > canvas.width ||
-      x + dx < 0 //miramos su possion "x" + su direccion "dx" si la direccion exede el ancho y la direccion es menor a 0 en este caso mas precicion ballRadius {esa direccion cambiala de sentido "dx = -dx"} "EL REBOTE"
+      x + dx < ballRadius //miramos su possion "x" + su direccion "dx" si la direccion exede el ancho y la direccion es menor a 0 en este caso mas precicion ballRadius {esa direccion cambiala de sentido "dx = -dx"} "EL REBOTE"
     ) {
       dx = -dx;
     }
     // para la colicion de arriba es un poco similar
-    if (y + dy < 0) {
+    if (y + dy < ballRadius) {
       dy = -dy;
     }
     //la pelota toca la pala
-    // aqui lo que tenemos que hacer es ver la distancia de la pala para decirle que SOLO PUEDE REBOTAR en el rango de la pala no fuera de ella y en la posicion done este la pala no antes no despues 
-    const pelotaEnEjeX = x > paddelX && x < paddelX + paddleWidth
-    const pelotaTocandoPala = y + dy > paddleY
+    // aqui lo que tenemos que hacer es ver la distancia de la pala para decirle que SOLO PUEDE REBOTAR en el rango de la pala no fuera de ella y en la posicion done este la pala no antes no despues
+    const pelotaEnEjeX = x > paddelX && x < paddelX + paddleWidth;
+    const pelotaTocandoPala = y + dy > paddleY;
 
-
-    if(pelotaEnEjeX && pelotaTocandoPala){
-      dy = -dy
-      
-    }else if (y + dy > canvas.height - 0) {
+    if (pelotaEnEjeX && pelotaTocandoPala) {
+      dy = -dy;
+    } else if (y + dy > canvas.height - ballRadius ) {
       console.log("Game Over");
       document.location.reload();
     }
 
     // este es el game over y el refrescar el juego
-    
+
     //asigna el movimiento
     x += dx;
     y += dy;
   }
+
+  //Movimiento de la pala
   function paddleMovement() {
-    // si presiopnamos a la derecha Y la posicion de la raqueta es menor al ancho  
-    if(presionandoDerecha && paddelX < canvas.width - paddleWidth ){
-      paddelX += 5
-    }else if(presionandoIzquierda && paddelX > 0 ){
-      paddelX += -5
+    // si presiopnamos a la derecha Y la posicion de la raqueta es menor al ancho
+    if (presionandoDerecha && paddelX < canvas.width - paddleWidth) {
+      paddelX += 8;
+    } else if (presionandoIzquierda && paddelX > 0) {
+      paddelX += -8;
     }
   }
   function cleanCanvas() {
@@ -175,7 +234,6 @@
   function initEvents() {
     document.addEventListener("keydown", keyDownHandler);
     document.addEventListener("keyup", keyUpHandler);
-    
 
     function keyDownHandler(event) {
       const { key } = event;
@@ -198,9 +256,9 @@
 
   //loop infinito "sincronizar en el refresco de la`pantalla con el refresco del navegador" requestAnimationFrmae y empezar a DIBUJAR
   function draw() {
-    console.log({presionandoDerecha, presionandoIzquierda});
     cleanCanvas();
-    //hayq ue dibujar los elementos del juego
+
+    //hay que dibujar los elementos del juego
     drawbBall();
     drawPaddle();
     drawBricks();
