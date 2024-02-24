@@ -44,20 +44,33 @@
   let x = canvas.width / 2;
   let y = canvas.height - 30;
   // velocidad de la pelota indicada con la direccion neceitamos direccion vertical y hrizontal
-  let dx = 5;
-  let dy = -2;
+  let dx = 3 ;
+  let dy = -3;
 
   //  despues de obtener mis funciones de dibujo y antes de empezar a dibjura empieza a crear las bariables de nuestros objetos como el de la pelota y despues volvemos a los dibujos
   function drawbBall() {
     // dibujar la pelota, empieza un trazado con beginPath() y termina con closePath()
-    contexto.beginPath();
-    // dibujamos un arco con arc(x, y, radio, angulo de inicio "0", angulo final pi x2 y eso nos hace un circulo perfecto redodndo)
-    contexto.arc(x, y, ballRadius, 0, Math.PI * 2);
-    contexto.fillStyle = "#fff";
-    // rellenar el trazado
-    contexto.fill();
-    // siempre cerrar el trazado
-    contexto.closePath();
+    // contexto.beginPath();
+    // // dibujamos un arco con arc(x, y, radio, angulo de inicio "0", angulo final pi x2 y eso nos hace un circulo perfecto redodndo)
+    // contexto.arc(x, y, ballRadius, 0, Math.PI * 2);
+    // contexto.fillStyle = "#fff";
+    // // rellenar el trazado
+    // contexto.fill();
+    // // siempre cerrar el trazado
+    // contexto.closePath();
+
+    contexto.drawImage(
+      $sprite, // le pasamos la imagen
+      45, // cordenada de ancho
+      94, // cordenadas del largo (desde el finder revisarlo)
+      8, // tamaño de recorte
+      8, // tamaño de recorte
+      x - ballRadius, // posicion X del dibujo
+      y - ballRadius , // posicion Y del dibujo
+      ballRadius * 3, // largo de la imagen
+      ballRadius * 
+      3 // ancho de la imagen
+    )
   }
 
   //PADDLE
