@@ -44,8 +44,9 @@
   let x = canvas.width / 2;
   let y = canvas.height - 30;
   // velocidad de la pelota indicada con la direccion neceitamos direccion vertical y hrizontal
-  let dx = 3 ;
-  let dy = -3;
+  let dx = 2;
+  let dy = -2;
+  const levelUp = dx + 2;
 
   //  despues de obtener mis funciones de dibujo y antes de empezar a dibjura empieza a crear las bariables de nuestros objetos como el de la pelota y despues volvemos a los dibujos
   function drawbBall() {
@@ -66,11 +67,10 @@
       8, // tamaño de recorte
       8, // tamaño de recorte
       x - ballRadius, // posicion X del dibujo
-      y - ballRadius , // posicion Y del dibujo
+      y - ballRadius, // posicion Y del dibujo
       ballRadius * 3, // largo de la imagen
-      ballRadius * 
-      3 // ancho de la imagen
-    )
+      ballRadius * 3 // ancho de la imagen
+    );
   }
 
   //PADDLE
@@ -110,8 +110,8 @@
   }
 
   //--------------- VARIABLES BRICKS //------------
-  const bricksRowCount = 6;
-  const bricksColumnCount = 13;
+  const bricksRowCount = 1;
+  const bricksColumnCount = 7;
   const brickWidth = 30;
   const brickHeigth = 14;
   const bricksPadding = 2;
@@ -176,12 +176,16 @@
       }
     }
   }
-
+ let velocidadAumentada = false
   function collisionDetection() {
+    let bricksDisponibles = 0;
+
     for (let c = 0; c < bricksColumnCount; c++) {
       for (let r = 0; r < bricksRowCount; r++) {
         const currentBrick = bricks[c][r];
         if (currentBrick.status === BRICKS_STATUS.DESTROYED) continue;
+        bricksDisponibles++;
+        console.log(bricksDisponibles);
 
         // en la misma poscion de la x del ladrillo
         const pelotaEnEjeX =
@@ -190,10 +194,15 @@
         const pelotaEnEjeY =
           y > currentBrick.y && y < currentBrick.y + brickHeigth;
 
-
         if (pelotaEnEjeX && pelotaEnEjeY && dy < ballRadius) {
           dy = -dy;
           currentBrick.status = BRICKS_STATUS.DESTROYED;
+          if (bricksDisponibles < 6 && !velocidadAumentada) {
+            dx = 4;
+            dy = 4;
+            velocidadAumentada = true;
+          }
+
         }
       }
     }
@@ -201,6 +210,7 @@
 
   function ballMovement() {
     // coliciones laterales
+
     if (
       x + dx > canvas.width ||
       x + dx < ballRadius //miramos su possion "x" + su direccion "dx" si la direccion exede el ancho y la direccion es menor a 0 en este caso mas precicion ballRadius {esa direccion cambiala de sentido "dx = -dx"} "EL REBOTE"
@@ -218,7 +228,7 @@
 
     if (pelotaEnEjeX && pelotaTocandoPala) {
       dy = -dy;
-    } else if (y + dy > canvas.height - ballRadius ) {
+    } else if (y + dy > canvas.height - ballRadius) {
       console.log("Game Over");
       document.location.reload();
     }
@@ -269,6 +279,7 @@
 
   //loop infinito "sincronizar en el refresco de la`pantalla con el refresco del navegador" requestAnimationFrmae y empezar a DIBUJAR
   function draw() {
+    console.log(dx, dy);
     cleanCanvas();
 
     //hay que dibujar los elementos del juego
@@ -284,4 +295,5 @@
   }
   draw();
   initEvents();
+  nextLevel();
 </script>
