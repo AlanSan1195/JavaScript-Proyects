@@ -4,7 +4,8 @@
     background-color: #111;
   }
   canvas {
-    border: 4px solid #fff;
+    border: 8px solid;
+    border-image: url("borde.png") 15;
     border-bottom: transparent;
     background: url("bkg.png") repeat;
     margin: 0 auto;
@@ -26,6 +27,7 @@
   const contexto = canvas.getContext("2d");
 
   const $sprite = document.querySelector("#sprite");
+  const $sprite2 = document.querySelector("#sprite2");
   const $bricks = document.querySelector("#bricks");
 
   canvas.width = 448;
@@ -51,26 +53,14 @@
   //  despues de obtener mis funciones de dibujo y antes de empezar a dibjura empieza a crear las bariables de nuestros objetos como el de la pelota y despues volvemos a los dibujos
   function drawbBall() {
     // dibujar la pelota, empieza un trazado con beginPath() y termina con closePath()
-    // contexto.beginPath();
+    contexto.beginPath();
     // // dibujamos un arco con arc(x, y, radio, angulo de inicio "0", angulo final pi x2 y eso nos hace un circulo perfecto redodndo)
-    // contexto.arc(x, y, ballRadius, 0, Math.PI * 2);
-    // contexto.fillStyle = "#fff";
-    // // rellenar el trazado
-    // contexto.fill();
-    // // siempre cerrar el trazado
-    // contexto.closePath();
-
-    contexto.drawImage(
-      $sprite, // le pasamos la imagen
-      45, // cordenada de ancho
-      94, // cordenadas del largo (desde el finder revisarlo)
-      8, // tamaño de recorte
-      8, // tamaño de recorte
-      x - ballRadius, // posicion X del dibujo
-      y - ballRadius, // posicion Y del dibujo
-      ballRadius * 3, // largo de la imagen
-      ballRadius * 3 // ancho de la imagen
-    );
+    contexto.arc(x, y, ballRadius, 0, Math.PI * 2);
+    contexto.fillStyle = "#fff";
+    // rellenar el trazado
+    contexto.fill();
+    //  siempre cerrar el trazado
+    contexto.closePath();
   }
 
   //PADDLE
@@ -78,7 +68,6 @@
   //VARIABLES de la paleta
   const paddlelHeight = 10;
   const paddleWidth = 55;
-
   // POSICION de la paleta
   let paddelX = (canvas.width - paddleWidth) / 2;
   let paddleY = canvas.height - paddlelHeight - 20;
@@ -98,8 +87,8 @@
     //dibujamos una imagen
     contexto.drawImage(
       $sprite, // le pasamos la imagen
-      30, // cordenada de ancho
-      175, // cordenadas del largo (desde el finder revisarlo)
+      28, // cordenada de ancho
+      270, // cordenadas del largo (desde el finder revisarlo)
       paddleWidth, // tamaño de recorte
       paddlelHeight, // tamaño de recorte
       paddelX, // posicion X del dibujo
@@ -110,8 +99,8 @@
   }
 
   //--------------- VARIABLES BRICKS //------------
-  const bricksRowCount = 1;
-  const bricksColumnCount = 7;
+  const bricksRowCount = 6;
+  const bricksColumnCount = 13;
   const brickWidth = 30;
   const brickHeigth = 14;
   const bricksPadding = 2;
@@ -176,16 +165,15 @@
       }
     }
   }
- let velocidadAumentada = false
-  function collisionDetection() {
-    let bricksDisponibles = 0;
+  // es como un candado para aumentar mi velocidad solo con ciertos ladrillos
 
+  let conteRotos = 0;
+  let paddleUp = false;
+  function collisionDetection() {
     for (let c = 0; c < bricksColumnCount; c++) {
       for (let r = 0; r < bricksRowCount; r++) {
         const currentBrick = bricks[c][r];
         if (currentBrick.status === BRICKS_STATUS.DESTROYED) continue;
-        bricksDisponibles++;
-        console.log(bricksDisponibles);
 
         // en la misma poscion de la x del ladrillo
         const pelotaEnEjeX =
@@ -197,12 +185,21 @@
         if (pelotaEnEjeX && pelotaEnEjeY && dy < ballRadius) {
           dy = -dy;
           currentBrick.status = BRICKS_STATUS.DESTROYED;
-          if (bricksDisponibles < 6 && !velocidadAumentada) {
-            dx = 4;
-            dy = 4;
-            velocidadAumentada = true;
+          conteRotos++;
+          function velocidadAumentada() {
+            if (conteRotos % 1 === 0) {
+              dx = dx + 0.5;
+              dy = dy + 0.5;
+              conteRotos = 0;
+            }
           }
+          velocidadAumentada();
 
+          // if (bricksDisponibles < 6 && !velocidadAumentada) {
+          //   dx = 4;
+          //   dy = 4;
+          //   velocidadAumentada = true;
+          // }
         }
       }
     }
@@ -241,12 +238,24 @@
   }
 
   //Movimiento de la pala
+  //con incremento de velocidad por cada que aumenta el nivel
+
+  let incrementoPaddle = 0;
+  let dxAnyterior = dx;
+  let dyAnyterior = dy;
   function paddleMovement() {
+    // incrementamos la velocidad del paddle a la ves que dx y dy aumenta con el nivel
+    if (dx > dxAnyterior && dy > dyAnyterior) {
+      incrementoPaddle += 0.5;
+    }
+    dxAnyterior = dx;
+    dyAnyterior = dy;
+
     // si presiopnamos a la derecha Y la posicion de la raqueta es menor al ancho
-    if (presionandoDerecha && paddelX < canvas.width - paddleWidth) {
-      paddelX += 8;
+    if (presionandoDerecha && paddelX < canvas.width - 75) {
+      paddelX += 6 + incrementoPaddle;
     } else if (presionandoIzquierda && paddelX > 0) {
-      paddelX += -8;
+      paddelX += -6 - incrementoPaddle;
     }
   }
   function cleanCanvas() {
@@ -279,7 +288,6 @@
 
   //loop infinito "sincronizar en el refresco de la`pantalla con el refresco del navegador" requestAnimationFrmae y empezar a DIBUJAR
   function draw() {
-    console.log(dx, dy);
     cleanCanvas();
 
     //hay que dibujar los elementos del juego
@@ -295,5 +303,4 @@
   }
   draw();
   initEvents();
-  nextLevel();
 </script>
