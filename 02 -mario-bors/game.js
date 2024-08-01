@@ -1,9 +1,16 @@
 import { animations } from "./animations.js";
+import { iniciarAudios } from "./audios.js";
+const anchoVnetana = window.innerWidth;
+const altoVentana = 280;
+const anchoTile = anchoVnetana;
+const altoTile = altoVentana / 5;
+const empiezaMario = anchoTile / 3;
 
 const config = {
+  autofocus: false,
   type: Phaser.AUTO,
-  width: 244,
-  height: 280,
+  width: anchoVnetana,
+  height: altoVentana,
   backgroundColor: "#049cd8",
   parent: "game",
   scene: {
@@ -20,13 +27,161 @@ const config = {
   },
 };
 
+var mario;
+var goomba;
+var marioBloqueado = false;
+var marioAgachado = false;
+var marioEstado = 0;
 var emptyBlocksList = [];
+let randomMontaña = Phaser.Math.Between(0, 200);
+let randomMontañaPequeña = Phaser.Math.Between(0, 800);
+let randomPiso = Phaser.Math.Between(520, 450);
+let altoPaisaje = altoVentana - altoTile + 26;
+
+function crearMario() {
+  mario = this.physics.add
+    .sprite(anchoVnetana / 9, altoTile, "mario-small")
+
+    .setOrigin(0, 1)
+    .setCollideWorldBounds(true)
+    .setGravityY(300);
+}
+
+function createEnemigos() {
+  goomba = this.physics.add.sprite(anchoVnetana / 3, 200, "goomba");
+  goomba.setOrigin(0, 1);
+  goomba.setGravityY(300);
+  goomba.anims.play("goomba-walk");
+
+  let randomgombadirection = Phaser.Math.Between(0, 10);
+  if (randomgombadirection > 1) {
+    goomba.setVelocityX(-50);
+  } else {
+    goomba.setVelocityX(50);
+  }
+
+  this.physics.add.collider(goomba, this.tile1);
+  this.physics.add.collider(goomba, this.pipe, function (goomba, pipe) {
+    this.pipe = pipe;
+    if (goomba.setVelocityX(-40)) {
+      goomba.setVelocityX(40);
+    } else {
+      goomba.setVelocityX(-40);
+    }
+    if (!mario.isDead) {
+      return;
+    }
+  });
+}
+
+function cosumeCoinsVisibles(mario, coins) {
+  coins.body.checkCollision.none = true;
+  this.sound.play("coin-sound", { volume: 0.2 });
+
+  coins.destroy();
+
+  this.add.text(coins.x, coins.y, "100", {
+    fontFamily: "pixel",
+    fontSize: anchoVnetana / 90,
+  });
+}
+
+function marioWalk() {
+  if (this.keys.left.isDown) {
+    mario.setVelocityX(-110);
+    if (!mario.body.touching.down) {
+      mario.setVelocityX(-94);
+    }
+    mario.flipX = true;
+    mario.body.touching.down && mario.anims.play("mario-walk", true);
+  } else if (this.keys.right.isDown) {
+    mario.setVelocityX(+110);
+    if (!mario.body.touching.down) {
+      mario.setVelocityX(94);
+    }
+    mario.flipX = false;
+    mario.body.touching.down && mario.anims.play("mario-walk", true);
+  } else if (mario.body.touching.down) {
+    mario.setVelocityX(0);
+    mario.anims.play("mario-stop", true);
+  }
+  if (this.keys.up.isDown && mario.body.touching.down) {
+    mario.setVelocityY(-260);
+    mario.anims.play("mario-jump");
+    this.sound.play("mario-jumping", { volume: 0.2 });
+  }
+
+  if (mario.y >= altoVentana && !mario.isDead) {
+    mario.isDead = true;
+    mario.setCollideWorldBounds(false);
+    if (!this.gameOverSound) {
+      this.sound.add("game-over", { volume: 0.2 }).play();
+      this.gameOverSound = true;
+    }
+    setTimeout(() => {
+      mario.setVelocityX(0);
+      mario.setVelocityY(-285);
+      mario.anims.play("mario-dead", true);
+      mario.setGravityY(500);
+    }, 100);
+    setTimeout(() => {
+      this.scene.restart();
+    }, 3000);
+  }
+}
+
+function caminarXL() {
+  if (mario.body.touching.down && this.keys.down.isDown) {
+    mario.anims.play("mario-xl-down", true);
+    marioAgachado = true;
+    mario.setVelocityX(0); // Detener el movimiento horizontal mientras está agachado
+  } else {
+    marioAgachado = false;
+
+    if (this.keys.left.isDown) {
+      mario.setVelocityX(-110);
+      mario.body.touching.down && mario.anims.play("mario-xl-walk", true);
+      mario.flipX = true;
+    } else if (this.keys.right.isDown) {
+      mario.setVelocityX(+110);
+      mario.flipX = false;
+      mario.body.touching.down && mario.anims.play("mario-xl-walk", true);
+    } else if (mario.body.touching.down) {
+      mario.setVelocityX(0);
+      mario.anims.play("mario-xl-stop", true);
+    }
+
+    if (this.keys.up.isDown && mario.body.touching.down) {
+      this.sound.play("mario-jumping", { volume: 0.2 });
+      mario.setVelocityY(-260);
+      mario.anims.play("mario-xl-jump");
+    }
+  }
+
+  if (mario.y >= altoVentana && !mario.isDead) {
+    mario.isDead = true;
+    mario.setCollideWorldBounds(false);
+    if (!this.gameOverSound) {
+      this.sound.add("game-over", { volume: 0.2 }).play();
+      this.gameOverSound = true;
+    }
+    setTimeout(() => {
+      mario.setVelocityY(-275);
+      mario.setGravityY(500);
+    }, 100);
+    setTimeout(() => {
+      marioEstado = 0;
+      this.scene.restart();
+    }, 3000);
+  }
+}
 
 function hitBlock(mario, block) {
   console.log("hit block and get hongo");
   if (!mario.body.blocked.up) {
     return;
-  }[]
+  }
+
   if (emptyBlocksList.includes(block)) {
     return;
   }
@@ -43,7 +198,7 @@ function hitBlock(mario, block) {
 
   let random = Phaser.Math.Between(0, 100);
 
-  if (random < 30) {
+  if (random > 50) {
     let coin = this.physics.add.sprite(block.x, block.y - 20, "coin");
 
     coin.body.allowGravity = false;
@@ -54,16 +209,24 @@ function hitBlock(mario, block) {
       return;
     }
 
+    function consumeCoin(mario, coin) {
+      this.sound.play("coin-sound", { volume: 0.2 });
+      this.add.text(coin.getBound().x, coin.y, "100", {
+        fontFamily: "pixel",
+        fontSize: anchoVnetana / 90,
+      });
+
+      coin.destroy();
+    }
+
     // Añadir un collider con una función de callback para manejar la colisión
-    this.physics.add.collider(this.mario, coin, function (mario, coin) {
-      this.mario = mario;
-      coin.destroy(); //
-    });
+    this.physics.add.overlap(mario, coin, consumeCoin, null, this);
 
     this.tweens.add({
       targets: coin,
       duration: 250,
       y: coin.y - 6,
+      start: performance.now(),
       onComplete: () => {
         this.tweens.add({
           targets: coin,
@@ -72,23 +235,32 @@ function hitBlock(mario, block) {
         });
       },
     });
-  } else if (random > 30) {
+  } else if (random <= 50) {
     let hongo = this.physics.add.sprite(block.x, block.y - 20, "hongo-xl");
     hongo.body.allowGravity = false;
     this.hongo = hongo;
-    this.physics.add.collider(this.mario, hongo, function (mario, hongo) {
-      this.mario = mario;
+
+    function consumeHongo(mario, hongo) {
+      this.sound.play("power-up", { volume: 0.2 });
+      mario.anims.play("mario-xl-stop", true);
       hongo.destroy();
-    });
+      marioEstado += 1;
+      if (marioEstado > 0) {
+      }
+      console.log(marioEstado);
+    }
+    this.physics.add.collider(mario, hongo, consumeHongo, null, this);
     this.tweens.add({
       targets: hongo,
       duration: 250,
       y: hongo.y - 6,
+      start: performance.now(),
       onComplete: () => {
         this.tweens.add({
           targets: hongo,
           duration: 550,
           y: hongo.y + 10,
+          start: performance.now(),
           onComplete: () => {
             if (!hongo) {
               return;
@@ -97,23 +269,31 @@ function hitBlock(mario, block) {
               hongo.setVelocityX(50);
               setTimeout(() => {
                 hongo.body.allowGravity = true;
-                this.physics.add.collider(hongo, this.tile);
+                this.physics.add.collider(hongo, this.tile1);
                 this.physics.add.collider(hongo, this.floor);
-                this.physics.add.collider(hongo, this.pipe, function ( hongo , pipe){
-                  this.pipe = pipe;
-                  hongo.setVelocityX(-50);
-                });
+                this.physics.add.collider(
+                  hongo,
+                  this.pipe,
+                  function (hongo, pipe) {
+                    this.pipe = pipe;
+                    hongo.setVelocityX(-50);
+                  }
+                );
               }, 400);
             } else {
               hongo.setVelocityX(-50);
               setTimeout(() => {
                 hongo.body.allowGravity = true;
-                this.physics.add.collider(hongo, this.tile);
+                this.physics.add.collider(hongo, this.tile1);
                 this.physics.add.collider(hongo, this.floor);
-                this.physics.add.collider(hongo, this.pipe, function (hongo, pipe ){
-                  this.pipe = pipe;
-                  hongo.setVelocityX(50);
-                } );
+                this.physics.add.collider(
+                  hongo,
+                  this.pipe,
+                  function (hongo, pipe) {
+                    this.pipe = pipe;
+                    hongo.setVelocityX(50);
+                  }
+                );
               }, 400);
             }
           },
@@ -122,22 +302,60 @@ function hitBlock(mario, block) {
     });
   }
 }
+function hitGoomba(mario, goomba) {
+  if (mario.body.touching.down && goomba.body.touching.up) {
+    // Mario colisiona con Goomba desde arriba
+    goomba.anims.play("goomba-hit", true); // Animación específica para el salto sobre Goomba
+
+    mario.setVelocityY(-170); // Rebote de Mario
+    this.sound.play("goomba-sound");
+    setTimeout(() => {
+      goomba.destroy();
+    }, 200);
+  } else {
+    // Mario colisiona con Goomba desde los lados o desde abajo
+    mario.isDead = true;
+    goomba.destroy();
+    mario.setCollideWorldBounds(false);
+    if (!this.gameOverSound) {
+      this.sound.add("game-over", { volume: 0.2 }).play();
+      this.gameOverSound = true;
+    }
+
+    setTimeout(() => {
+      mario.setVelocityY(-285);
+      mario.anims.play("mario-dead", true);
+      mario.setGravityY(500);
+    }, 100);
+    setTimeout(() => {
+      mario.body.checkCollision.none = true;
+    }, 100);
+    setTimeout(() => {
+      marioEstado = 0;
+      this.scene.restart();
+    }, 3000);
+  }
+}
 
 function preload() {
   // cargara elmenetos de la escena
+
   this.load.image("cloud1", "assets/scenery/overworld/cloud1.png");
-  this.load.spritesheet("mario", "assets/entities/mario.png", {
+  this.load.image("mountain", "assets/scenery/overworld/mountain2.png");
+  this.load.image("mountain-small", "assets/scenery/overworld/mountain1.png");
+  this.load.spritesheet("mario-small", "assets/entities/mario.png", {
     frameWidth: 18,
     frameHeight: 16,
+  });
+  this.load.spritesheet("mario-xl", "assets/entities/mario-grown.png", {
+    frameWidth: 18,
+    frameHeight: 32,
   });
 
   //cargar plataformas
   this.load.image("floorbricks", "assets/scenery/overworld/floorbricks.png");
   this.load.image("pipe", "assets/scenery/pipe1.png");
-  this.load.image("mountain", "assets/scenery/overworld/mountain2.png");
-  this.load.image("mountain-small", "assets/scenery/overworld/mountain1.png");
   this.load.image("bush", "assets/scenery/overworld/bush1.png");
-  this.load.audio("game-over", "assets/sound/music/gameOver.mp3");
   this.load.spritesheet(
     "mistery-Blocks",
     "assets/blocks/underground/misteryBlock.png",
@@ -148,100 +366,130 @@ function preload() {
   );
   this.load.image("empty-block", "assets/blocks/underground/emptyBlock.png");
 
-  // cargara coleccionables
+  // cargar coleccionables
   this.load.image("hongo-xl", "assets/collectibles/super-mushroom.png");
   this.load.spritesheet("coin", "assets/collectibles/coin.png", {
     frameWidth: 16,
     frameHeight: 16,
   });
-}
-function create() {
-  this.add.image(100, 50, "cloud1").setOrigin(0.5, 0.5).setScale(0.15);
 
-  this.block = this.add.sprite(150, 200, "mistery-Blocks");
+  // cargar enemigos
+  this.load.spritesheet("goomba", "assets/entities/overworld/goomba.png", {
+    frameWidth: 16,
+    frameHeight: 16,
+  });
+
+  // cargar audios
+  iniciarAudios(this);
+}
+
+function create() {
+  animations(this);
+
+  // dibujar elementos de la escena
+  this.add.image(100, 50, "cloud1").setOrigin(0.5, 0.5).setScale(0.15);
+  this.mountain = this.physics.add.staticGroup();
+  this.mountain
+    .create(randomMontaña, altoPaisaje, "mountain")
+    .setOrigin(0, 1)
+    .refreshBody();
+  this.mountain
+    .create(randomMontañaPequeña, altoPaisaje, "mountain-small")
+    .setOrigin(0, 1)
+    .refreshBody();
+  this.block = this.add.sprite(150, 180, "mistery-Blocks");
   this.physics.add.existing(this.block);
   this.block.body.setImmovable(true); // evito que se mueva el bloque si mario colisiona con el
   this.block.body.allowGravity = false; // Evitar que el bloque sea afectado por la gravedad
-
-  this.mountain = this.physics.add.staticGroup();
-  this.mountain.create(0, 250, "mountain").setOrigin(0, 1).refreshBody();
-  this.mountain
-    .create(400, 250, "mountain-small")
-    .setOrigin(0, 1)
-    .refreshBody();
 
   this.bush = this.physics.add.staticGroup();
   this.bush.create(260, 250, "bush").setOrigin(0, 1);
 
   this.pipe = this.physics.add.staticGroup();
   this.pipe.create(200, 250, "pipe").setOrigin(0, 1).refreshBody();
-  // this.pipe.create(250, 250, "pipe").setOrigin(0, 1).refreshBody();
 
-  this.tile = this.add
-    .tileSprite(0, 280, 1000, 32, "floorbricks")
-    .setOrigin(0, 1);
-  this.physics.add.existing(this.tile, true);
-
-  this.floor = this.physics.add.staticGroup();
-  this.floor.create(1010, 280, "floorbricks").setOrigin(0, 1).refreshBody();
-  this.floor.create(1180, 280, "floorbricks").setOrigin(0, 1).refreshBody();
-
-  this.mario = this.physics.add
-    .sprite(100, 100, "mario")
+  // coleccionables
+  this.coins = this.physics.add.staticGroup();
+  this.coins
+    .create(100, 200, "coin")
     .setOrigin(0, 1)
-    .setCollideWorldBounds(true)
-    .setGravityY(300);
+    .anims.play("coin-shine", true);
+  this.coins
+    .create(300, 160, "coin")
+    .setOrigin(0, 1)
+    .anims.play("coin-shine", true);
 
-  this.physics.add.collider(this.mario, this.tile);
-  this.physics.add.collider(this.mario, this.floor);
-  this.physics.add.collider(this.mario, this.pipe);
+  // Definir la función crearTile dentro de create
+  function crearTile(x, y, width, height, texture) {
+    const tile = this.add.tileSprite(x, y, width, height, texture);
+    tile.setOrigin(0, 1);
+    this.physics.add.existing(tile, true);
+    return tile;
+  }
+
+  // Usar la función crearTile para crear los tiles
+  this.tile1 = crearTile.call(
+    this,
+    0,
+    altoVentana - altoTile + 80,
+    500,
+    altoTile,
+    "floorbricks"
+  );
+  this.tile2 = crearTile.call(
+    this,
+    570,
+    altoVentana - altoTile + 79,
+    550,
+    altoTile,
+    "floorbricks"
+  );
+  this.tile3 = crearTile.call(
+    this,
+    1200,
+    altoVentana - altoTile + 79,
+    350,
+    altoTile,
+    "floorbricks"
+  );
+  crearMario.call(this);
+  createEnemigos.call(this);
+
   //implementar physics y acciones
-  this.physics.add.collider(this.mario, this.block, hitBlock, null, this);
+  this.physics.add.overlap(mario, this.coins, cosumeCoinsVisibles, null, this);
+  this.physics.add.collider(mario, this.tile1);
+  this.physics.add.collider(mario, this.tile2);
+  this.physics.add.collider(mario, this.tile3);
+  this.physics.add.collider(mario, this.floor);
+  this.physics.add.collider(mario, this.pipe);
+  this.physics.add.collider(mario, goomba, hitGoomba, null, this);
+  this.physics.add.collider(mario, this.block, hitBlock, null, this);
 
+  // tamaño del mundo y camaras
   this.physics.world.setBounds(0, 0, 2000, config.height);
   this.cameras.main.setBounds(0, 0, 2000, config.height);
-  this.cameras.main.startFollow(this.mario);
-  animations(this);
+  this.cameras.main.startFollow(mario);
 
   this.keys = this.input.keyboard.createCursorKeys();
 }
+
 function update() {
-  if (this.keys.left.isDown) {
-    this.mario.x -= 2;
-    this.mario.flipX = true;
-    this.mario.anims.play("mario-walk", true);
-  } else if (this.keys.right.isDown) {
-    this.mario.x += 2;
-    this.mario.flipX = false;
-    this.mario.anims.play("mario-walk", true);
+  if (marioEstado == 1) {
+    mario.setOffset(0, mario.height / 2);
+
+    caminarXL.call(this);
   } else {
-    this.mario.anims.play("mario-stop", true);
+    marioWalk.call(this);
   }
-  if (this.keys.up.isDown && this.mario.body.touching.down) {
-    this.mario.setVelocityY(-260);
-    this.mario.anims.play("mario-jump", true);
-  }
-  if (this.mario.y >= config.height && !this.mario.isDead) {
-    this.mario.isDead = true;
-    this.mario.setCollideWorldBounds(false);
-    if (!this.gameOverSound) {
-      this.sound.add("game-over", { volume: 0.2 }).play();
-      this.gameOverSound = true;
-    }
-    setTimeout(() => {
-      this.mario.setVelocityY(-210);
-      this.mario.anims.play("mario-dead", true);
-      this.mario.setGravityY(500);
-    }, 100);
-    setTimeout(() => {
-      this.scene.restart();
-    }, 3000);
-  }
+
   if (this.block.isHit) {
     this.block.anims.play("block-hit", true);
   } else {
     this.block.isHit = false;
     this.block.anims.play("block-shine", true);
+  }
+  if (mario.isDead) {
+    mario.anims.play("mario-dead", true);
   }
 }
 new Phaser.Game(config);
