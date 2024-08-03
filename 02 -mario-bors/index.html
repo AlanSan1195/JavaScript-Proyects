@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super mario </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super mario</title>
     <script src="./phaser.min.js"></script>
     <script type="module" src="./game.js"></script>
-</head>
-<style>
-
+  </head>
+  <style>
     @font-face {
-        font-family: "pixel";
-        src: url("assets/fonts/SuperMario.ttf");
+      font-family: "pixel";
+      src: url("assets/fonts/SuperMario.ttf");
     }
     body {
-        font-family: "pixel", sans-serif;
-        display: grid;
-        place-items: center;
-        background: black;
-        height: 100vh;
-     
+      font-family: "pixel", sans-serif;
+      display: grid;
+      place-items: center;
+      background: black;
+      height: 100vh;
     }
-  
-    
-</style>
-<body>
-    <div id="game"></div>
-</body>
+    #game {
+      position: relative;
+    }
+    #score {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: white;
+      font-size: 1rem;
+      padding: 1rem;
+    }
+  </style>
+  <body>
+    <div id="game">
+      <div id="score">
+        <script type="module">
+          import { sumaScore } from "./game.js";
+          sumaScore(); 
+        </script>
+      </div>
+    </div>
+  </body>
 </html>

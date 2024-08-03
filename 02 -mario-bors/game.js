@@ -29,6 +29,7 @@ const config = {
 
 var mario;
 var goomba;
+var score = 0;
 var marioBloqueado = false;
 var marioAgachado = false;
 var marioEstado = 0;
@@ -73,17 +74,12 @@ function createEnemigos() {
     }
   });
 }
+// Asegúrate de exportar la función sumaScore
+export function sumaScore() {
 
-function cosumeCoinsVisibles(mario, coins) {
-  coins.body.checkCollision.none = true;
-  this.sound.play("coin-sound", { volume: 0.2 });
-
-  coins.destroy();
-
-  this.add.text(coins.x, coins.y, "100", {
-    fontFamily: "pixel",
-    fontSize: anchoVnetana / 90,
-  });
+  // vamos a agarrar el div con el id score y le ponemos de froma dinamica el score
+  const scoreElement = document.getElementById("score");
+  scoreElement.innerText = (score);
 }
 
 function marioWalk() {
@@ -175,6 +171,35 @@ function caminarXL() {
     }, 3000);
   }
 }
+function consumeCoin(mario, coin) {
+  this.sound.play("coin-sound", { volume: 0.2 });
+  const scoreText = this.add.text(coin.x, coin.y, "100", {
+    fontFamily: "pixel",
+    fontSize: anchoVnetana / 90,
+  });
+  score += 100;
+  this.tweens.add({
+    targets: scoreText,
+    duration: 500,
+    y: scoreText.y - 20,
+    onComplete: () => {
+      this.tweens.add({
+        targets: scoreText,
+        duration: 100,
+        alpha: 0,
+        onComplete: () => {
+          scoreText.destroy();
+        },
+      });
+    },
+  });
+  if (scoreText) {
+    sumaScore();
+    console.log(score);
+  }
+
+  coin.destroy();
+}
 
 function hitBlock(mario, block) {
   console.log("hit block and get hongo");
@@ -198,29 +223,19 @@ function hitBlock(mario, block) {
 
   let random = Phaser.Math.Between(0, 100);
 
-  if (random > 50) {
+  if (random > 10) {
     let coin = this.physics.add.sprite(block.x, block.y - 20, "coin");
 
     coin.body.allowGravity = false;
     this.coin = coin;
     if (this.coin) {
       this.coin.anims.play("coin-shine", true);
+      this.physics.add.overlap(mario, coin, consumeCoin, null, this);
     } else {
       return;
     }
 
-    function consumeCoin(mario, coin) {
-      this.sound.play("coin-sound", { volume: 0.2 });
-      this.add.text(coin.getBound().x, coin.y, "100", {
-        fontFamily: "pixel",
-        fontSize: anchoVnetana / 90,
-      });
-
-      coin.destroy();
-    }
-
     // Añadir un collider con una función de callback para manejar la colisión
-    this.physics.add.overlap(mario, coin, consumeCoin, null, this);
 
     this.tweens.add({
       targets: coin,
@@ -456,7 +471,7 @@ function create() {
   createEnemigos.call(this);
 
   //implementar physics y acciones
-  this.physics.add.overlap(mario, this.coins, cosumeCoinsVisibles, null, this);
+  this.physics.add.overlap(mario, this.coins, consumeCoin, null, this);
   this.physics.add.collider(mario, this.tile1);
   this.physics.add.collider(mario, this.tile2);
   this.physics.add.collider(mario, this.tile3);
