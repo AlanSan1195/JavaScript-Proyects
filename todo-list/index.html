@@ -1,12 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <title>Todo list</title>
-</head>
-<body>
-    
-    
-</body>
+  </head>
+  <body>
+    <main>
+      <div>
+        <ul id="lista">
+          <li id="tarea">
+            <input id="inputTarea" type="text" placeholder=" Nueva tarea..." />
+          </li>
+        </ul>
+      </div>
+
+      <button id="add">Agregar</button>
+      <button id="delete">Eliminar</button>
+    </main>
+  </body>
 </html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const lista = document.getElementById("lista");
+    const input = document.getElementById("inputTarea");
+
+    document.getElementById("add").addEventListener("click", () => {
+      const textTarea = input.value;
+      if (textTarea !== "") {
+        const nuevaTarea = document.createElement("li");
+        nuevaTarea.textContent = textTarea;
+        lista.appendChild(nuevaTarea);
+
+        input.value = "";
+      } else {
+        console.warn("Debes ingresar una tarea");
+      }
+    });
+    const eliminar = document
+      .getElementById("delete")
+      .addEventListener("click", () => {
+        const lista = document.getElementById("lista");
+        const elementoEliminar = lista.children[1];
+        if (elementoEliminar) {
+          lista.removeChild(elementoEliminar);
+        } else {
+         window.alert("no hay nada que eliminar")
+        }
+      });
+  });
+</script>
+
+<script></script>
