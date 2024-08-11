@@ -26,7 +26,7 @@ export const animations = (game) => {
   game.anims.create({
     key: "block-shine",
     frames: game.anims.generateFrameNumbers("mistery-Blocks", {
-      start: 0,
+      start: 1,
       end: 2,
     }),
     frameRate: 4,
