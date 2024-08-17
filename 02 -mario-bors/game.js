@@ -106,8 +106,8 @@ function createMisteryBlocks() {
   let randomY = Phaser.Math.Between(180, 190);
   this.misteryBricks = this.physics.add.staticGroup({
     key: "mistery-Blocks",
-    repeat: 3,
-    setXY: { x: randomX, y: randomY, stepX: 70 },
+    repeat: 1,
+    setXY: { x: randomX, y: randomY, stepX: 410 },
   });
 
   this.misteryBricks.children.iterate(function (block) {
@@ -123,27 +123,11 @@ function createMisteryBlocks() {
       let newMysterisRandom = this.physics.add.staticGroup({
         key: "mistery-Blocks",
         repeat: 1,
-        setXY: { x: newBlockX + 16, y: newBlockY, stepX: 670 },
+        setXY: { x: newBlockX + 16, y: newBlockY, stepX:70 },
       });
       newMysterisRandom.children.iterate(function (newBlock) {
         newBlock.anims.play("block-shine", true);
-        this.physics.add.collider(mario, newBlock,){
-          if (!mario.body.blocked.up) {
-            return;
-          }
-          if(emptyBlocksList.includes(newBlock)){
-            return;
-          }
-          emptyBlocksList.push(newBlock);
-          newBlock.isHit = true;
-          if (!newBlock.isHit) {
-            return;
-          } else {
-            newBlock.anims.play("block-hit", true);
-          }
-        } );
-        }
-        
+        this.physics.add.collider(mario, newBlock, hitMisteryBlocks, null, this);
       
       },this)
       
@@ -402,6 +386,7 @@ function hitMisteryBlocks(mario, misteryBlocks) {
 //     });
 //   }
 // }
+
 
 // Asegúrate de exportar la función sumaScore
 export function sumaScore() {
@@ -688,7 +673,7 @@ function create() {
   );
 
   crearMario.call(this);
-  // createEnemigos.call(this);
+  createEnemigos.call(this);
   createBricks.call(this);
   createMisteryBlocks.call(this);
 
