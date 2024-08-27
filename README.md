@@ -8,14 +8,14 @@
 
 <h1 align="center">JavaScript Proyectos Alan San</h1>
 
-<p align="center">
+<!-- <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
 
   <img alt="Github language count" src="https://img.shields.io/github/languages/count/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
 
   <img alt="Repository size" src="https://img.shields.io/github/repo-size/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
 
-  <img alt="License" src="https://img.shields.io/github/license/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
+  <img alt="License" src="https://img.shields.io/github/license/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8"> -->
 
   <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8" /> -->
 
@@ -44,27 +44,30 @@
 
 <br>
 
-## :dart: About ##
+## :dart: Acerca de los proyectos ##
 
-Describe your project
+Aquí tienes el texto corregido y con los emojis:
 
-## :sparkles: Features ##
+---
 
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
+Este repositorio sin duda es mi favorito porque me he divertido bastante y aprendido 😊. JavaScript es mi primer lenguaje de programación y me parece todo magia ✨. De la mano de un gran docente de la industria, me encaminó con sus enseñanzas el streamer Miguel Ángel Durán, mejor conocido como Midudev, porque en verdad como se aprende. Estos proyectos son porque los he aprendido de su parte y me siento afortunado del tipo de proyectos que se irán agregando 🚀.
 
+## :joycon: Demos ##
+Arkanoid: (https://arkanoidsan.netlify.app/)
 ## :rocket: Technologies ##
 
 The following tools were used in this project:
 
-- [JavaScrip](https://developer.mozilla.org/es/docs/Web/JavaScript)
 
+JavaScript 🧀
+HTML 🥕
+CSS 💙
+Phaser 🕹️
 ## :white_check_mark: Requirements ##
 
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
+Antes de empezar :checkered_flag:, deberias tener instalado [Git](https://git-scm.com) y [Node](https://nodejs.org/en/)
 
-## :checkered_flag: Starting ##
+## :checkered_flag: Empezando ##
 
 ```bash
 # Clone this project
@@ -73,21 +76,25 @@ $ git clone https://github.com/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-mid
 # Access
 $ cd javascript-proyectos-midusan
 
-# Install dependencies
-$ pnpm
+
+# Intalar Motor Phaser
+1.- ve a [Phaser](https://phaser.io/download/stable) y descarga el archivo ya minificado.js y lo llevas la carpeta del proyecto, no te preocupes, este archivo no se tiene que editar ni nada.
+2.- ve atu archivo index.html y en una etiqueta escript agregas la ruta del motor de pohaser que es el archivo que descargamos
+
+# Instalar dependencias, esta dependencia es solo para el el desarrollo del proyecto 02 de Super Mario Bros que es el motor de JavaScript que utilizamos para su desarrollo
+$ npm install phaser@v3.80.1
 
 # Run the project
-$ pnpm start
+#  La forma en la que corro mis proyectos es usando el Pluguin: Live Preview mi Microsoft, la recomiendo mucho
 
-# The server will initialize in the <http://localhost:3000>
 ```
 
-## :memo: License ##
+<!-- ## :memo: License ##
 
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
+This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file. -->
 
 
-Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">{{YOUR_NAME}}</a>
+Hecho con :heart: por <a href="https://github.com/AlanSan1195" target="_blank">Alan San</a>
 
 &#xa0;
 
