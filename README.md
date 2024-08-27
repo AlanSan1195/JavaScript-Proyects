@@ -46,14 +46,24 @@
 
 ## :dart: Acerca de los proyectos ##
 
-Aquí tienes el texto corregido y con los emojis:
-
 ---
 
-Este repositorio sin duda es mi favorito porque me he divertido bastante y aprendido 😊. JavaScript es mi primer lenguaje de programación y me parece todo magia ✨. De la mano de un gran docente de la industria, me encaminó con sus enseñanzas el streamer Miguel Ángel Durán, mejor conocido como Midudev, porque en verdad como se aprende. Estos proyectos son porque los he aprendido de su parte y me siento afortunado del tipo de proyectos que se irán agregando 🚀.
+Este repositorio sin duda es mi favorito porque me he divertido y he aprendido bastante 😊. JavaScript es mi primer lenguaje de programación y me parece todo magia ✨. De la mano de un gran docente de la industria, me encaminó con sus enseñanzas el streamer Miguel Ángel Durán, mejor conocido como Midudev, porque en verdad como se aprende. Estos proyectos son porque los he aprendido de su parte y me siento afortunado del tipo de proyectos que se irán agregando 🚀.
 
-## :joycon: Demos ##
-Arkanoid: (https://arkanoidsan.netlify.app/)
+
+
+
+## ✨ Demos
+
+| #   | Proyecto          | Descripción                                                              | Código                                                                                                                                                                                    | Website                                                                                                                                                 |
+| --- | ----------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+
+| 2   | **arkanoid-game** | El juego clasico de Arkanoid simple y basicio asi es como se difrutaba tiene una line de difulcutad alta no romeras 13 bloques te lo aseguro          | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/main/01%20-arkanold-Game) | [Demo](https://arkanoidsan.netlify.app/) |
+
+
+
+
+
 ## :rocket: Technologies ##
 
 The following tools were used in this project:
