@@ -64,16 +64,12 @@ Este repositorio sin duda es mi favorito porque me he divertido y he aprendido b
 
 
 
-## :rocket: Technologies ##
-
-The following tools were used in this project:
-
-
+## :rocket: Technologias ##
 JavaScript 🧀
 HTML 🥕
 CSS 💙
 Phaser 🕹️
-## :white_check_mark: Requirements ##
+## :white_check_mark: Requerimientos ##
 
 Antes de empezar :checkered_flag:, deberias tener instalado [Git](https://git-scm.com) y [Node](https://nodejs.org/en/)
 
@@ -88,7 +84,7 @@ $ cd javascript-proyectos-midusan
 
 
 # Intalar Motor Phaser
-1.- ve a [Phaser](https://phaser.io/download/stable) y descarga el archivo ya minificado.js y lo llevas la carpeta del proyecto, no te preocupes, este archivo no se tiene que editar ni nada.
+1.- ve a Phaser https://phaser.io/download/stable y descarga el archivo ya minificado.js y lo llevas la carpeta del proyecto, no te preocupes, este archivo no se tiene que editar ni nada.
 2.- ve atu archivo index.html y en una etiqueta escript agregas la ruta del motor de pohaser que es el archivo que descargamos
 
 # Instalar dependencias, esta dependencia es solo para el el desarrollo del proyecto 02 de Super Mario Bros que es el motor de JavaScript que utilizamos para su desarrollo
