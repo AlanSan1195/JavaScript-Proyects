@@ -61,6 +61,7 @@ Este repositorio sin duda es mi favorito porque me he divertido y he aprendido b
 | 1   | **Arkanoid-game** 🧱 | El juego clasico de Arkanoid simple y basicio asi es como se difrutaba tiene una line de difulcutad alta no romeras 13 bloques te lo aseguro          | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/main/01%20-arkanold-Game) | [Demo](https://arkanoidsan.netlify.app/) | 🕹️
 
 | 2   | **Super-Mario-bros** 🍄 | Estoy clonando el primer nivel del gran Juego Super Mario bros, creado con el motor Phaser de javascrit que nos brida una experiencia de desarrollo muy buena, a diferenciua de cambas simplifica el desarrollo y es facil de enetender | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/02%20-mario-bors) | [Demo](https://supermariobrosgame.netlify.app/) | 🕹️
+
 | 3   | **To-do-List** ✅ | En este proyecto aprendi a entender el JSON que es y como funcionan, tanto .parse y .stringfy, aprendi que es y para que se usa un LocalStorage  | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/03%20-to-do-list) | [Demo](https://to-do-listsan.netlify.app/) | 🕹️
 
 
