@@ -29,7 +29,9 @@ const config = {
   },
 };
 function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
 }
 
 var mario;
@@ -40,20 +42,11 @@ var marioAgachado = false;
 var marioEstado = 0;
 var emptyBlocksList = [];
 let randomMontaña = Phaser.Math.Between(0, 200);
-let randomMontañaPequeña = Phaser.Math.Between(0, 800);
+let randomMontañaPequeña = Phaser.Math.Between(600, 900);
 let randomPiso = Phaser.Math.Between(520, 450);
 var ramdomMisteryBlocksX = Phaser.Math.Between(430, 480);
 var ramdomMisteryBlocksY = Phaser.Math.Between(180, 190);
 let altoPaisaje = altoVentana - altoTile + 26;
-
-function createControls(){
-  if(mobileDevice){
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-  }
-}
 
 function crearMario() {
   mario = this.physics.add
@@ -522,6 +515,10 @@ function create() {
     .setOrigin(0, 1)
     .refreshBody();
   this.mountain
+    .create(randomMontaña + 880 , altoPaisaje, "mountain")
+    .setOrigin(0, 1)
+    .refreshBody();
+  this.mountain
     .create(randomMontañaPequeña, altoPaisaje, "mountain-small")
     .setOrigin(0, 1)
     .refreshBody();
@@ -610,8 +607,6 @@ function create() {
     this
   );
   this.physics.add.collider(mario, this.bricks, hitBricks, null, this);
-
-  createControls.call(this);
 
   // tamaño del mundo y camaras
   this.physics.world.setBounds(0, 0, 1488, config.height);
