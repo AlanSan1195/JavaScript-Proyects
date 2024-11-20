@@ -55,7 +55,7 @@ function createEnemigos() {
   // Crear un grupo de enemigos
   this.enemigos = this.physics.add.group({
     key: "goomba",
-    repeat: 2, // número de goombas adicionales
+    repeat: 8, // número de goombas adicionales
     setXY: { x: anchoVnetana / 3, y: 200, stepX: 190 },
   });
 
@@ -80,26 +80,13 @@ function createEnemigos() {
   });
 }
 function createBricks() {
-  let randomX = Phaser.Math.Between(26, 50);
-  let randomY = Phaser.Math.Between(180, 190);
+  let randomX = Phaser.Math.Between(670, 674);
+  let randomY = Phaser.Math.Between(205, 205);
   this.bricks = this.physics.add.staticGroup({
-    key: "bricks",
-    repeat: 3,
-    setXY: { x: randomX, y: randomY, stepX: 570 },
+    key: "brick-image",
+    repeat: 1,
+    setXY: { x: randomX, y: randomY, stepX: 400 },
   });
-}
-function hitBricks(mario, bricks) {
-  if (mario.body.touching.up && bricks.body.touching.down) {
-    console.log("colision con bricks");
-    this.tweens.add({
-      targets: bricks,
-      y: bricks.y - 10,
-      ease: "Power1",
-      duration: 100,
-      yoyo: true,
-    });
-    // bricks.destroy();
-  }
 }
 function createMisteryBlocks() {
   let randomX = Phaser.Math.Between(296, 300);
@@ -114,26 +101,42 @@ function createMisteryBlocks() {
     block.isHit = false;
     block.anims.play("block-shine", true);
     let random = Phaser.Math.Between(0, 100);
-    if (random => 50) {
+    if ((random) => 50) {
       let newBlockX = block.x;
       let newBlockY = block.y;
-
-
 
       let newMysterisRandom = this.physics.add.staticGroup({
         key: "mistery-Blocks",
         repeat: 1,
-        setXY: { x: newBlockX + 16, y: newBlockY, stepX:70 },
+        setXY: { x: newBlockX + 16, y: newBlockY, stepX: 70 },
       });
       newMysterisRandom.children.iterate(function (newBlock) {
         newBlock.anims.play("block-shine", true);
-        this.physics.add.collider(mario, newBlock, hitMisteryBlocks, null, this);
-      
-      },this)
-      
+        this.physics.add.collider(
+          mario,
+          newBlock,
+          hitMisteryBlocks,
+          null,
+          this
+        );
+      }, this);
     }
   }, this);
 }
+function hitBricks(mario, bricks) {
+  if (mario.body.touching.up && bricks.body.touching.down) {
+    console.log("colision con bricks");
+    this.tweens.add({
+      targets: bricks,
+      y: bricks.y - 10,
+      ease: "Power1",
+      duration: 100,
+      yoyo: true,
+    });
+    // bricks.destroy();
+  }
+}
+
 function hitMisteryBlocks(mario, misteryBlocks) {
   if (!mario.body.blocked.up) {
     return;
@@ -267,126 +270,6 @@ function hitMisteryBlocks(mario, misteryBlocks) {
     });
   }
 }
-// function hitBlock(mario, block) {
-//   console.log("hit block and get hongo");
-//   if (!mario.body.blocked.up) {
-//     return;
-//   }
-
-//   if (emptyBlocksList.includes(block)) {
-//     return;
-//   }
-//   emptyBlocksList.push(block);
-//   block.isHit = true;
-//   // Animar el bloque
-//   this.tweens.add({
-//     targets: block,
-//     y: block.y - 20,
-//     ease: "Power1",
-//     duration: 100,
-//     yoyo: true,
-//   });
-
-//   let random = Phaser.Math.Between(0, 100);
-
-//   if (random > 80) {
-//     let coin = this.physics.add.sprite(block.x, block.y - 20, "coin");
-
-//     coin.body.allowGravity = false;
-//     this.coin = coin;
-//     if (this.coin) {
-//       this.coin.anims.play("coin-shine", true);
-//       this.physics.add.overlap(mario, coin, consumeCoin, null, this);
-//     } else {
-//       return;
-//     }
-
-//     // Añadir un collider con una función de callback para manejar la colisión
-
-//     this.tweens.add({
-//       targets: coin,
-//       duration: 250,
-//       y: coin.y - 6,
-//       start: performance.now(),
-//       onComplete: () => {
-//         this.tweens.add({
-//           targets: coin,
-//           duration: 250,
-//           y: coin.y + 10,
-//         });
-//       },
-//     });
-//   } else if (random < 80) {
-//     let hongo = this.physics.add.sprite(block.x, block.y - 20, "hongo-xl");
-//     hongo.body.allowGravity = false;
-//     this.hongo = hongo;
-
-//     function consumeHongo(mario, hongo) {
-//       this.sound.play("power-up", { volume: 0.2 });
-//       mario.anims.play("mario-xl-stop", true);
-//       hongo.destroy();
-//       marioEstado += 1;
-//       if (marioEstado > 0) {
-//         //importante para cuando un sprite cambia se tienen que manejar sus alturas para que coincidan con el resto del mapa: explicacion:mira, si mario va a crecer y cambiar de sprite a un tamaño mas grande le decimos con setOffset que mario se desplaza nada en el eje x pero en el eje y se desplazar su altura y lo dividimos 2 para que vuelva a tocar el suelo visualmente si no flotara por que su altura se desplazara solo hacia arriba y despues lo IMPORTANTE:
-//         mario.body.setOffset(0, mario.height / 2);
-//         mario.body.setSize(mario.width, mario.height, true);
-//       }
-//       console.log(marioEstado);
-//     }
-//     this.physics.add.collider(mario, hongo, consumeHongo, null, this);
-//     this.tweens.add({
-//       targets: hongo,
-//       duration: 250,
-//       y: hongo.y - 6,
-//       start: performance.now(),
-//       onComplete: () => {
-//         this.tweens.add({
-//           targets: hongo,
-//           duration: 550,
-//           y: hongo.y + 10,
-//           start: performance.now(),
-//           onComplete: () => {
-//             if (!hongo) {
-//               return;
-//             }
-//             if (Phaser.Math.Between(0, 10) <= 4) {
-//               hongo.setVelocityX(50);
-//               setTimeout(() => {
-//                 hongo.body.allowGravity = true;
-//                 this.physics.add.collider(hongo, this.tile1);
-//                 this.physics.add.collider(hongo, this.floor);
-//                 this.physics.add.collider(
-//                   hongo,
-//                   this.pipe,
-//                   function (hongo, pipe) {
-//                     this.pipe = pipe;
-//                     hongo.setVelocityX(-50);
-//                   }
-//                 );
-//               }, 400);
-//             } else {
-//               hongo.setVelocityX(-50);
-//               setTimeout(() => {
-//                 hongo.body.allowGravity = true;
-//                 this.physics.add.collider(hongo, this.tile1);
-//                 this.physics.add.collider(hongo, this.floor);
-//                 this.physics.add.collider(
-//                   hongo,
-//                   this.pipe,
-//                   function (hongo, pipe) {
-//                     this.pipe = pipe;
-//                     hongo.setVelocityX(50);
-//                   }
-//                 );
-//               }, 400);
-//             }
-//           },
-//         });
-//       },
-//     });
-//   }
-// }
-
 
 // Asegúrate de exportar la función sumaScore
 export function sumaScore() {
@@ -558,6 +441,10 @@ function preload() {
   this.load.image("cloud1", "assets/scenery/overworld/cloud1.png");
   this.load.image("mountain", "assets/scenery/overworld/mountain2.png");
   this.load.image("mountain-small", "assets/scenery/overworld/mountain1.png");
+  this.load.image("flag-base", "assets/scenery/flag-base.png");
+  this.load.image("finla-flag", "assets/scenery/final-flag.png");
+  this.load.image("pipe-L", "assets/scenery/horizontal-final-tube.png");
+  this.load.image("castel", "assets/scenery/castle.png");
   this.load.spritesheet("mario-small", "assets/entities/mario.png", {
     frameWidth: 18,
     frameHeight: 16,
@@ -568,7 +455,7 @@ function preload() {
   });
 
   //cargar plataformas
-  this.load.image("floorbricks", "assets/scenery/overworld/floorbricks.png");
+  this.load.image("floorBricks", "assets/scenery/overworld/floorbricks.png");
   this.load.image("pipe", "assets/scenery/pipe1.png");
   this.load.image("bush", "assets/scenery/overworld/bush1.png");
   this.load.spritesheet(
@@ -587,7 +474,7 @@ function preload() {
       frameHeight: 16,
     }
   );
-  this.load.image("bricks", "assets/blocks/overworld/brick.png");
+  this.load.image("brick-image", "assets/blocks/overworld/customBlock.png");
   this.load.image("empty-block", "assets/blocks/underground/emptyBlock.png");
 
   // cargar coleccionables
@@ -611,8 +498,11 @@ function create() {
   animations(this);
 
   // dibujar elementos de la escena
+  //nuebe
   this.add.image(100, 50, "cloud1").setOrigin(0.5, 0.5).setScale(0.15);
+  //montallas
   this.mountain = this.physics.add.staticGroup();
+
   this.mountain
     .create(randomMontaña, altoPaisaje, "mountain")
     .setOrigin(0, 1)
@@ -621,17 +511,36 @@ function create() {
     .create(randomMontañaPequeña, altoPaisaje, "mountain-small")
     .setOrigin(0, 1)
     .refreshBody();
-  // this.block = this.add.sprite(150, 180, "mistery-Blocks");
-  // this.physics.add.existing(this.block);
-  // this.block.body.setImmovable(true); // evito que se mueva el bloque si mario colisiona con el
-  // this.block.body.allowGravity = false; // Evitar que el bloque sea afectado por la gravedad
+
+  //flag
+  this.add.image(1360, altoPaisaje - 4, "flag-base").setOrigin(0, 1);
+  this.add.image(1353, altoPaisaje - 147, "finla-flag").setOrigin(0, 1);
 
   this.bush = this.physics.add.staticGroup();
-  this.bush.create(260, 250, "bush").setOrigin(0, 1);
+  this.bush.create(260, 250, "bush").setOrigin(0, 1).refreshBody();
 
   this.pipe = this.physics.add.staticGroup();
   this.pipe.create(200, 250, "pipe").setOrigin(0, 1).refreshBody();
   this.pipe.create(340, 270, "pipe").setOrigin(0, 1).refreshBody();
+
+  this.castel = this.physics.add.staticGroup();
+  this.castel.create(1440, altoPaisaje, "castel").setOrigin(0, 1).refreshBody();
+
+  this.floorBricks = this.physics.add.staticGroup();
+  this.floorBricks
+    .create(1150, altoPaisaje - 77, "floorBricks")
+    .setOrigin(0, 1)
+    .refreshBody();
+
+  this.flag = this.physics.add.staticGroup();
+  this.flag
+    .create(1360, altoPaisaje - 4, "flag-base")
+    .setOrigin(0, 1)
+    .refreshBody();
+  this.flag
+    .create(1353, altoPaisaje - 147, "finla-flag")
+    .setOrigin(0, 1)
+    .refreshBody();
 
   // coleccionables
   this.coins = this.physics.add.staticGroup();
@@ -653,7 +562,7 @@ function create() {
     altoVentana - altoTile + 80,
     500,
     altoTile,
-    "floorbricks"
+    "floorBricks"
   );
   this.tile2 = crearTile.call(
     this,
@@ -661,15 +570,7 @@ function create() {
     altoVentana - altoTile + 79,
     950,
     altoTile,
-    "floorbricks"
-  );
-  this.tile3 = crearTile.call(
-    this,
-    1600,
-    altoVentana - altoTile + 79,
-    650,
-    altoTile,
-    "floorbricks"
+    "floorBricks"
   );
 
   crearMario.call(this);
@@ -677,13 +578,14 @@ function create() {
   createBricks.call(this);
   createMisteryBlocks.call(this);
 
-  //implementar physics y acciones
+  //implementar fisicas y acciones
   this.physics.add.overlap(mario, this.coins, consumeCoin, null, this);
   this.physics.add.collider(mario, this.tile1);
   this.physics.add.collider(mario, this.tile2);
   this.physics.add.collider(mario, this.tile3);
   this.physics.add.collider(mario, this.floor);
   this.physics.add.collider(mario, this.pipe);
+  this.physics.add.collider(mario, this.floorBricks);
   this.physics.add.collider(mario, this.enemigos, hitGoomba, null, this);
   // this.physics.add.collider(mario, this.block, hitBlock, null, this);
   this.physics.add.collider(
@@ -696,8 +598,8 @@ function create() {
   this.physics.add.collider(mario, this.bricks, hitBricks, null, this);
 
   // tamaño del mundo y camaras
-  this.physics.world.setBounds(0, 0, 3000, config.height);
-  this.cameras.main.setBounds(0, 0, 3000, config.height);
+  this.physics.world.setBounds(0, 0, 1488, config.height);
+  this.cameras.main.setBounds(0, 0, 1528, config.height);
   this.cameras.main.startFollow(mario);
 
   this.keys = this.input.keyboard.createCursorKeys();
@@ -709,13 +611,6 @@ function update() {
   } else {
     marioWalk.call(this);
   }
-
-  // if (this.block.isHit) {
-  //   this.block.anims.play("block-hit", true);
-  // } else {
-  //   this.block.isHit = false;
-  //   this.block.anims.play("block-shine", true);
-  // }
 
   if (mario.isDead) {
     mario.anims.play("mario-dead", true);
