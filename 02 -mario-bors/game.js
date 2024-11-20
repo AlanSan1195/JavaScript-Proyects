@@ -6,6 +6,8 @@ const anchoTile = anchoVnetana;
 const altoTile = altoVentana / 5;
 const empiezaMario = anchoTile / 3;
 
+const mobileDevice = isMobileDevice();
+
 const config = {
   autofocus: false,
   type: Phaser.AUTO,
@@ -26,6 +28,9 @@ const config = {
     },
   },
 };
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 var mario;
 var goomba;
@@ -40,6 +45,15 @@ let randomPiso = Phaser.Math.Between(520, 450);
 var ramdomMisteryBlocksX = Phaser.Math.Between(430, 480);
 var ramdomMisteryBlocksY = Phaser.Math.Between(180, 190);
 let altoPaisaje = altoVentana - altoTile + 26;
+
+function createControls(){
+  if(mobileDevice){
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+  }
+}
 
 function crearMario() {
   mario = this.physics.add
@@ -596,6 +610,8 @@ function create() {
     this
   );
   this.physics.add.collider(mario, this.bricks, hitBricks, null, this);
+
+  createControls.call(this);
 
   // tamaño del mundo y camaras
   this.physics.world.setBounds(0, 0, 1488, config.height);
