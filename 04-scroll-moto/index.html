@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcMoto-Scroll</title>
+    <style>
+      /* paso 1 */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+      img {
+        width: 100dvw;
+        height: 100dvh;
+        object-fit: cover;
+        position: fixed;
+      }
+      main {
+        height: 300dvh;
+      }
+      /* paso 1  */
+
+      header {
+        background: linear-gradient(40deg, #ba3816, #a41705 40%);
+        width: 300px;
+        height: 300px;
+        border-radius: 1000px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        margin-top: -230px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        animation: showDown 1.2s ease-out;
+        
+      }
+
+      #img {
+        width: 130px;
+        margin: 0 auto;
+        height: auto;
+        margin-bottom: 30px;
+      }
+
+      @keyframes showDown {
+        0% {
+          transform: translate3d(-50%,-100%, 0);
+          opacity: 0;
+        }
+        100% {
+          transform: translate3d(-50%, 0, 0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img id="img" src="./logo.png" alt="Ichiban - Your Way to Freedom" />
+      </header>
+      <img
+        id="imagen"
+        src="/04-scroll-moto/frames/moto-001.webp"
+        alt="Moto cool"
+      />
+    </main>
+    <script>
+      let maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      const maxFrames = 151;
+
+      const img = document.querySelector("#imagen");
+
+      window.addEventListener("resize", () => {
+        maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      });
+      // paso 2
+      // tenemos que aprender a calcular cual es la distancia en nuestro scroll
+      window.addEventListener("scroll", () => {
+        const scrollPosition = window.scrollY;
+        const scrollFraction = scrollPosition / maxScroll;
+        // ¿ que freame le toca ?
+        // enumeramos los frames
+        const frmaes = Math.floor(scrollFraction * maxFrames) ;
+
+        // creamos el id del nomber de la imagen
+        const id = frmaes.toString().padStart(3, "0");
+
+        img.src = `/04-scroll-moto/frames/moto-${id}.webp`;
+        console.log(id);
+      });
+    </script>
+  </body>
+</html>
