@@ -64,6 +64,8 @@ Este repositorio sin duda es mi favorito porque me he divertido y he aprendido b
 
 | 3   | **To-do-List** ✅ | En este proyecto aprendi a entender el JSON que es y como funcionan, tanto .parse y .stringfy, aprendi que es y para que se usa un LocalStorage  | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/03%20-to-do-list) | [Demo](https://to-do-listsan.netlify.app/) | 🕹️
 
+| 4   | **Moto-scroll** ✅ | Un proyecto muy interesante en donde trabajamos con un videop y sus frames y al hacer escroll escucha la posicion del del scroll para sincronizar con los frames y dar como resultado un efecto muy chulo, cosas mas importantes: aprender a calcular el scroll del documento, crear un cuerpo mas amplio para tener un limite de movimiento y el uso dinamico de id para usar el frame adecuado. aprendi bastante en este trabajo fue muy divertido 🏍️ | [![GitHub Badge](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/04-scroll-moto) | [Demo](....) | 🕹️
+
 
 
 
