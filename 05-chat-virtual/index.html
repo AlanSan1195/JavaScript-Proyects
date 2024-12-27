@@ -13,23 +13,29 @@
 
     body { 
         font-family: Arial, sans-serif; 
-        background-color: #18181b;
+        
+        background: linear-gradient(rgb(30, 121, 166), #f05fe6bf);
         color: #fff; 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+      
     }
+  
 
     #chat { 
-        border: 1px solid #444; 
+        border: 1px solid rgba(255, 255, 255, 0.345) ;
+        border-radius: 1%; 
         padding: 10px; width: 300px; 
         height: 400px; 
         overflow-y: scroll; 
-        background: #1e1e22; 
+        scrollbar-color: rgba(255, 255, 255, 0.672) #f4f5f141;
+        background: linear-gradient(rgb(30, 121, 166), #f05fe7cb);
+
     }
     .message{
-        background-color: #444444bc ;
+        background-color: #4444444e ;
     
         margin: 5px 0;
      }
@@ -48,16 +54,21 @@
     #eventInput input, button { 
         padding: 5px; 
     }
+    p{
+        font-size: small;
+        opacity: 50%;
+    }
   </style>
 </head>
 <body>
-  <h1>Game Chat Simulation</h1>
-  <div id="chat"></div>
-  <div id="eventInput">
-    <input type="text" id="event" placeholder="Escribe a que jugarás" />
-    <button id="sendEvent">OK</button>
-  </div>
-
+    <h1>Game Chat Simulation</h1>
+    <div id="chat"></div>
+    <div id="eventInput">
+      <input type="text" id="event" placeholder="Escribe a que jugarás" />
+      <button id="sendEvent">OK</button>
+    </div>
+    <p>Proximamente..</p>
+  
 </body>
 </html>
 
@@ -281,7 +292,7 @@
             message('', randomComment )
         }
 
-         setInterval(simultaeEvent, 2000)
+         setInterval(simultaeEvent, 1000)
     </script>
   </body>
 </html>
