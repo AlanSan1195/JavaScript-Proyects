@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Chat Simulation</title>
+  <style>
+    *,
+    *::before,
+    *::after{
+        box-sizing: border-box;
+    }
+
+    body { 
+        font-family: Arial, sans-serif; 
+        background-color: #18181b;
+        color: #fff; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #chat { 
+        border: 1px solid #444; 
+        padding: 10px; width: 300px; 
+        height: 400px; 
+        overflow-y: scroll; 
+        background: #1e1e22; 
+    }
+    .message{
+        background-color: #444444bc ;
+    
+        margin: 5px 0;
+     }
+    .user {  
+        color: #6cf;
+        font-weight: bold;
+     }
+    .text { 
+        color: #ddd;
+     }
+    #eventInput { 
+        margin-top: 10px; 
+        display: flex; 
+        gap: 5px; 
+    }
+    #eventInput input, button { 
+        padding: 5px; 
+    }
+  </style>
+</head>
+<body>
+  <h1>Game Chat Simulation</h1>
+  <div id="chat"></div>
+  <div id="eventInput">
+    <input type="text" id="event" placeholder="Escribe a que jugarás" />
+    <button id="sendEvent">OK</button>
+  </div>
+
+</body>
+</html>
+
+    <script>
+        const chat = document.getElementById('chat')
+        const colors = [
+        "#FF5733", "#33FF57", "#3357FF", "#F4D03F", "#8E44AD", 
+        "#2ECC71", "#E74C3C", "#1ABC9C", "#3498DB", "#9B59B6",
+        "#E67E22", "#BDC3C7", "#F1C40F", "#7D3C98", "#D35400"
+    ];
+        const usuarios = [
+  "alanPr0o",
+  "migueXdev22",
+  "illoSan",
+  "devSTarion66",
+  "s4vitar",
+  "GamerWolfy",
+  "ShadowTrix34",
+  "KvotheKing",
+  "DragonX9",
+  "NekoPro",
+  "FrostyNight",
+  "Astari0nMain",
+  "Dagger99",
+  "CyborgFox",
+  "NightHawk777",
+  "TacoSlayerX",
+  "KrakenLord",
+  "GhostCoder22",
+  "PhoenixRider",
+  "MagicBow21",
+  "Pixel88",
+  "DarkSorcerer",
+  "NeoHunter",
+  "Firestorm0",
+  "BladeXK",
+  "RavenousDev",
+  "CryptoWizard",
+  "DevKnight55",
+  "HyperFang",
+  "ElBrujoXD",
+  "TurboTrol",
+  "WolfByte",
+  "GameCaster",
+  "MysticShadow",
+  "Zxander",
+  "Mage7",
+  "Skywalker99",
+  "DarkNebula",
+  "ZombiEx3",
+  "AstroFlare",
+  "GameLover42",
+  "ArcaneLord",
+  "PowerNinja",
+  "FuryFlameX",
+  "PixelKnight",
+  "StealthyFox",
+  "WarlockDev",
+  "Hunter66",
+  "SilentArrow",
+  "IronClaw99",
+  "MasterDoom",
+  "ZeroCode88",
+  "FireBow32",
+  "RogueX",
+  "FrostLord",
+  "MechaWolf9",
+  "SteelDev",
+  "GhostHawk7",
+  "Th3Destroyer",
+  "DracoRex",
+  "Crafter",
+  "CyberRaven",
+  "StarDev",
+  "NinjaX4",
+  "ShadowFire9",
+  "Zer0Flame",
+  "GameXpert88",
+  "ChocoKiller",
+  "SoulHunter",
+  "LunaMage21",
+  "FuryFox",
+  "MysticDagger",
+  "Stellar99",
+  "AsteroidDev",
+  "GlitchFang",
+  "InfernoTroll",
+  "Blitz44",
+  "DeathArrow",
+  "MagicXpro",
+  "RedWolfy",
+  "ChaosRider",
+  "SageFlame",
+  "elWanderer",
+  "PowerVortex",
+  "IcePhantom",
+  "NeoXander",
+  "ShadowCrafter",
+  "DevWraith",
+  "TechWolf99",
+  "SkyFury",
+  "DuskNinja",
+  "IllusionistX",
+  "GaleStorm",
+  "PixelMonk",
+  "InfernoX5",
+  "Quantum",
+  "DarkViper",
+  "Cyb3rTroll",
+  "PhantomZero",
+  "FrostStalker"
+];
+        const comments = [
+            "hola hola",
+            "hola",
+            "holaaaaa",
+            "gusto verte",
+            "Te conectasteeeee",
+            "Holaaaaaa",
+            "HOLAAAAAAA",
+            "YA LLEGUE AL DIERCTO !!",
+            "El alanProoo",
+            "subete ahi ",
+            "hola amiguito  :)",
+    "jajaja",
+    "jjaajslk",
+    "ups",
+    "xd Xd",
+    "el capitulo 3 es el mejor",
+    "no s ete pase comparr el amillo",
+    "mejor no",
+    "NI LOCO",
+    "CUIDADO",
+    "vamos",
+    "creo que si es posible",
+    "no me lo esperaba jaja",
+    "que putazo",
+    "esta rotisimo ese wey",
+    "desde la secu que no juego algo asi ",
+    "imaginate que sea verdad",
+    "esperanza infinita",
+    "ya bro ya bro relajate",
+    "no te enganches",
+    "BIEN MALVIBRADO XD 😂",
+    "callese morro!!!",
+    "Dejen jugaaaaaaaaaar",
+    "amaaaaaaaa algo de comeeer",
+    "uy pollito rico",
+    "mata a todos mejor",
+    "Eres muy malo",
+    "maldito friki de closet",
+    "ay si ay si es mejor que el red dead Redeption xD xD",
+    "ME LA PELA",
+    "Tu personaje Kvothe no es de casualidad de un libro ?",
+    "¿Astarion siempre actúa así? 😂",
+    "¿Qué arco es mejor para Shadowheart?",
+    "¡No puedo con Gale, es un genio! 🤯",
+    "jajaja esa tirada fue un desastre xD",
+    "¿Hay un bug con los hechizos de nivel 5?",
+    "¡Karlach es demasiado OP, amo su estilo!",
+    "¿Cómo consigo más flechas mágicas?",
+    "¿Por qué Lae'zel siempre se ve tan molesta? 🤔",
+    "xD xD esa pelea estuvo brutal",
+    "¡Esa escena con Shadowheart fue increíble!",
+    "¿Alguien más tiene problemas con los diálogos?",
+    "¡Oh no, se murió mi personaje favorito! 😭",
+    "El combate por turnos es muy estratégico.",
+    "¿Dónde consigo una buena espada larga?",
+    "¡Ese crítico fue insano! 😎",
+    "La música del juego es una joya, 10/10.",
+    "jajaja Gale siempre está metiendo la pata.",
+    "¿Puedes robar sin que te atrapen aquí?",
+    "¿Astarion siempre tiene esa actitud de diva? 😂",
+    "¡Qué tensión en esa última decisión!",
+    "El capítulo 3 tiene los mejores giros de la historia.",
+    "¿Viste cómo se resolvió el conflicto en el capítulo 3? Épico.",
+    "No entiendo cómo sobreviviste al jefe del capítulo 3.",
+    "El capítulo 3 debería llamarse ‘la masacre’.",
+    "Creo que el capítulo 3 es lo más difícil del juego.",
+    "¿Por qué todos hablan del capítulo 3 como si fuera imposible?",
+    "El capítulo 3 está lleno de secretos increíbles.",
+    "Esa escena en el capítulo 3 fue conmovedora.",
+    "Shadowheart brilla muchísimo en el capítulo 3.",
+    "¿Por qué Karlach no tiene más protagonismo en el capítulo 3?",
+    "Los enemigos del capítulo 3 son brutales, pero geniales.",
+    "Me tardé horas en pasar el capítulo 3.",
+    "¿Te fijaste en la música del capítulo 3? Es espectacular.",
+    "El capítulo 3 me hizo replantearme toda mi estrategia.",
+    "Los giros de trama en el capítulo 3 son impresionantes.",
+    "Esa batalla final del capítulo 3 fue épica.",
+    "¡No puedo creer cómo resolviste esa parte del capítulo 3!",
+    "El capítulo 3 es donde el juego se pone serio.",
+    "¿Alguien más lloró en el capítulo 3? 😭",
+    "El villano del capítulo 3 tiene la mejor historia.",
+    "¡El capítulo 3 casi me hace tirar el control! xD",
+    "Mi personaje principal cambió por completo en el capítulo 3.",
+    "La decisión final en el capítulo 3 fue demasiado difícil.",
+    "¡Shadowheart y Karlach juntos en el capítulo 3 son un dúo brutal!",
+    "¿Cómo resolviste el rompecabezas del capítulo 3?",
+    "Ese combate en la torre del capítulo 3 fue mi favorito.",
+    "¿Alguien más piensa que el capítulo 3 define todo el juego?",
+    "El capítulo 3 tiene las mejores armas hasta ahora.",
+    "Las relaciones entre los personajes cambian mucho en el capítulo 3."
+];
+
+        
+        function message(user, comment){
+            
+            const message = document.createElement('div')
+            const randomUser = usuarios[Math.floor(Math.random()* usuarios.length )]
+            const userColor = colors[usuarios.indexOf(randomUser) % colors.length]
+            message.className = 'message';
+            message.innerHTML = `<span class='user' style="color: ${userColor}">${usuarios[Math.floor(Math.random() * usuarios.length)]}</span>: ${comment}`
+            chat.appendChild(message)
+            chat.scrollTop = chat.scrollHeight
+        }
+
+        function simultaeEvent(){
+            const event = Math.floor(Math.random() * comments.length)
+            const randomComment  = comments[Math.floor(Math.random() * comments.length)] 
+            message('', randomComment )
+        }
+
+         setInterval(simultaeEvent, 2000)
+    </script>
+  </body>
+</html>
