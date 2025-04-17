@@ -1,0 +1,107 @@
+<!-- con est eproyecto sencillo y basico donde omitire el diseño es para practicar:
+
+1. el uso basico que continene las webs de agregar o eliminar en una lista
+ para este proyecto las funciones basicas de js: son
+ * DOM
+ * createElement()
+ * textContent ()
+ * appendChild()
+ * removeChild()
+ * .children -->
+
+<!-- 2. uso de localStorage y JSON.PARSE Y JSNO.STRINGIFY() -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>To-do list</title>
+  </head>
+  <body>
+    <main>
+      <div class="articulo">
+        <article>
+          <p>
+            Con este proyecto simple, <span> enetenderemos el uso de fucniones
+            necesarias y basicas de JavaScript</span> en el mundo del desarrollo web,
+            <span>al hacer un To-Do-List aprenderemos</span>  como usar estos metodos y
+            fucniones.
+          </p>
+          <p>Lo que se aprende con este proyecto es...</p>
+        </article>
+      </div>
+      <div class="tarjeta">
+        <input id="inputTarea" type="text" placeholder="Agrega lo que tienes por aprender" />
+        <ul id="lista"></ul>
+      </div>
+      <div class="botones">
+        <button id="add">Agregar</button>
+        <button id="delete">Eliminar</button>
+      </div>
+    </main>
+  </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    cargarTareas();
+    var listaDeTareas = document.getElementById("lista");
+    var inputText = document.getElementById("inputTarea");
+
+    const agregar = document
+      .getElementById("add")
+      .addEventListener("click", () => {
+        const textTarea = inputText.value;
+        const nuevaTarea = document.createElement("li");
+        if (textTarea !== "") {
+          nuevaTarea.textContent = textTarea;
+          listaDeTareas.appendChild(nuevaTarea);
+          guaradarTareas(textTarea);
+          inputText.value = "";
+        } else {
+          window.alert("No hay terea que guardar, ingresa una nueva tarea");
+        }
+      });
+    const eliminar = document
+      .getElementById("delete")
+      .addEventListener("click", () => {
+        const deleteTarea = listaDeTareas.children[0];
+        if (deleteTarea) {
+          //creamos funcion de eliminar tarea y actualizar el storag al reiniciar la pagina
+          eleminarTarea(deleteTarea.textContent);
+          listaDeTareas.removeChild(deleteTarea);
+        } else {
+          window.alert("No hay tareas que eliminar");
+        }
+      });
+
+    function guaradarTareas(textTarea) {
+      var tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+      tareas.push(textTarea);
+      // guardemos en el localstorag la lista
+      localStorage.setItem("tareas", JSON.stringify(tareas));
+    }
+  });
+
+  function cargarTareas() {
+    let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+    let listaTareas = document.getElementById("lista");
+    tareas.map((tarea) => {
+      var nuevaTarea = document.createElement("li");
+      nuevaTarea.textContent = tarea;
+      listaTareas.appendChild(nuevaTarea);
+    });
+  }
+
+  function eleminarTarea(textTarea) {
+    let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+    let indiceTareas = tareas.indexOf(textTarea);
+
+    if (indiceTareas !== -1) {
+      tareas.splice(indiceTareas, 1);
+      localStorage.setItem("tareas", JSON.stringify(tareas));
+    }
+  }
+</script>

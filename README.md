@@ -60,7 +60,23 @@ Este repositorio sin duda es mi favorito porque me he divertido y he aprendido b
 
 | 1   | **Arkanoid-game** 🧱 | El juego clasico de Arkanoid simple y basicio asi es como se difrutaba tiene una line de difulcutad alta no romeras 13 bloques te lo aseguro          | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/main/01%20-arkanold-Game) | [Demo](https://arkanoidsan.netlify.app/) | 🕹️
 
+<<<<<<< HEAD
 | 2   | **Super-Mario-bros** 🍄 | Estoy clonando el primer nivel del gran Juego Super Mario bros, creado con el motor Phaser de javascrit que nos brida una experiencia de desarrollo muy buena, a diferenciua de cambas simplifica el desarrollo y es facil de enetender | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/02%20-mario-bors) | [Demo](https://alangamebros.netlify.app/) | 🕹️
+=======
+| 2   | **Super-Mario-bros** 🍄 | Estoy clonando el primer nivel del gran Juego Super Mario bros, creado con el motor Phaser de javascrit que nos brida una experiencia de desarrollo muy buena, a diferenciua de cambas simplifica el desarrollo y es facil de enetender | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/02%20-mario-bors) | [Demo](https://supermariobrosgame.netlify.app/) | 🕹️
+
+| 3   | **To-do-List** ✅ | En este proyecto aprendi a entender el JSON que es y como funcionan, tanto .parse y .stringfy, aprendi que es y para que se usa un LocalStorage  | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/03%20-to-do-list) | [Demo](https://to-do-listsan.netlify.app/) | 🕹️
+
+| 4   | **Moto-scroll** ✅ | Un proyecto muy interesante en donde trabajamos con un videop y sus frames y al hacer escroll escucha la posicion del del scroll para sincronizar con los frames y dar como resultado un efecto muy chulo, cosas mas importantes: aprender a calcular el scroll del documento, crear un cuerpo mas amplio para tener un limite de movimiento y el uso dinamico de id para usar el frame adecuado. aprendi bastante en este trabajo fue muy divertido 🏍️ | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/04-scroll-moto) | [Demo](....) | 🕹️
+
+| 5   | **Chat-Stream** ✅ |Me encanta jugar videojuegos paso muchas horas haciendolo y me gustaria sacarle provecho a esto, cree esta simulacion de chat para practicar la Stremeada y aprender a conversar en vivo mientras juego, la idea es escalarlo hasta ingrearle una IA que te arroje comentarios hacerca del juego que estes jugando para que practiques hacer Stream 👾 | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/05-chat-virtual) | [Demo](https://prismatic-dolphin-f45a1a.netlify.app/) | 🕹️
+
+
+
+🤖
+
+
+>>>>>>> practicas
 
 
 ## :rocket: Technologias ##
