@@ -483,8 +483,8 @@ function create() {
   this.physics.add.overlap(mario, this.coins, consumeCoin, null, this);
   this.physics.add.collider(mario, this.tile1);
   this.physics.add.collider(mario, this.tile2);
-  this.physics.add.collider(mario, this.tile3);
-  this.physics.add.collider(mario, this.floor);
+  // this.physics.add.collider(mario, this.tile3);
+  // this.physics.add.collider(mario, this.floor);
   this.physics.add.collider(mario, this.pipe);
   this.physics.add.collider(mario, this.floorBricks);
   this.physics.add.collider(mario, this.enemigos, hitGoomba, null, this);
