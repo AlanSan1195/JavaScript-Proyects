@@ -1,6 +1,7 @@
 import { animations } from "./animations.js";
 import { iniciarAudios } from "./audios.js";
-import { marioWalk, caminarXL } from "./walk.js";
+import { marioWalk, caminarXL } from "./controls.js";
+
 const anchoVnetana = window.innerWidth;
 const altoVentana = 280;
 const anchoTile = anchoVnetana;
@@ -35,12 +36,10 @@ function isMobileDevice() {
   );
 }
 
-var mario;
 var goomba;
 var score = 0;
 var marioBloqueado = false;
 var marioAgachado = false;
-var marioEstado = 0;
 var emptyBlocksList = [];
 let randomMontaña = Phaser.Math.Between(0, 200);
 let randomMontañaPequeña = Phaser.Math.Between(600, 900);
@@ -50,7 +49,7 @@ var ramdomMisteryBlocksY = Phaser.Math.Between(180, 190);
 let altoPaisaje = altoVentana - altoTile + 26;
 
 function crearMario() {
-  mario = this.physics.add
+  this.mario = this.physics.add
     .sprite(anchoVnetana / 9, altoTile, "mario-small")
 
     .setOrigin(0, 1)
@@ -121,7 +120,7 @@ function createMisteryBlocks() {
       newMysterisRandom.children.iterate(function (newBlock) {
         newBlock.anims.play("block-shine", true);
         this.physics.add.collider(
-          mario,
+          this.mario,
           newBlock,
           hitMisteryBlocks,
           null,
@@ -211,18 +210,24 @@ function hitMisteryBlocks(mario, misteryBlocks) {
     hongo.body.allowGravity = false;
     this.hongo = hongo;
 
-    function consumeHongo(mario, hongo) {
+    const consumeHongo = (mario, hongo) => {
+      if(this.marioEstado == 1){
+        hongo.destroy();
+        return;
+      }
+    
       this.sound.play("power-up", { volume: 0.2 });
       mario.anims.play("mario-xl-stop", true);
       hongo.destroy();
-      marioEstado += 1;
-      if (marioEstado > 0) {
+      this.marioEstado += 1;
+      if (this.marioEstado > 0) {
         //importante para cuando un sprite cambia se tienen que manejar sus alturas para que coincidan con el resto del mapa: explicacion:mira, si mario va a crecer y cambiar de sprite a un tamaño mas grande le decimos con setOffset que mario se desplaza nada en el eje x pero en el eje y se desplazar su altura y lo dividimos 2 para que vuelva a tocar el suelo visualmente si no flotara por que su altura se desplazara solo hacia arriba y despues lo IMPORTANTE:
         mario.body.setOffset(0, mario.height / 2);
         mario.body.setSize(mario.width, mario.height, true);
       }
-      console.log(marioEstado);
-    }
+      
+      console.log(this.marioEstado);
+    };
     this.physics.add.collider(mario, hongo, consumeHongo, null, this);
     this.tweens.add({
       targets: hongo,
@@ -278,8 +283,35 @@ function hitMisteryBlocks(mario, misteryBlocks) {
     });
   }
 }
+function consumeCoin(mario, coin) {
+  this.sound.play("coin-sound", { volume: 0.2 });
+  const scoreText = this.add.text(coin.x, coin.y, "100", {
+    fontFamily: "pixel",
+    fontSize: anchoVnetana / 90,
+  });
+  score += 100;
+  this.tweens.add({
+    targets: scoreText,
+    duration: 500,
+    y: scoreText.y - 20,
+    onComplete: () => {
+      this.tweens.add({
+        targets: scoreText,
+        duration: 100,
+        alpha: 0,
+        onComplete: () => {
+          scoreText.destroy();
+        },
+      });
+    },
+  });
+  if (scoreText) {
+    sumaScore();
+    console.log(score);
+  }
 
-
+  coin.destroy();
+}
 
 // Asegúrate de exportar la función sumaScore
 export function sumaScore() {
@@ -287,8 +319,6 @@ export function sumaScore() {
   const scoreElement = document.getElementById("score");
   scoreElement.innerText = score;
 }
-
-
 
 function hitGoomba(mario, goomba) {
   if (mario.body.touching.down && goomba.body.touching.up) {
@@ -322,7 +352,7 @@ function hitGoomba(mario, goomba) {
       mario.body.checkCollision.none = true;
     }, 100);
     setTimeout(() => {
-      marioEstado = 0;
+      this.marioEstado = 0;
       this.scene.restart();
     }, 3000);
   }
@@ -388,30 +418,26 @@ function preload() {
 }
 
 function create() {
+  this.marioEstado = 0;
   animations(this);
+  console.log("estado de mario:", this.marioEstado);
 
   // dibujar elementos de la escena
-  //nuebe
   this.add.image(100, 50, "cloud1").setOrigin(0.5, 0.5).setScale(0.15);
-  //montallas
-  this.mountain = this.physics.add.staticGroup();
 
+  this.mountain = this.physics.add.staticGroup();
   this.mountain
     .create(randomMontaña, altoPaisaje, "mountain")
     .setOrigin(0, 1)
     .refreshBody();
   this.mountain
-    .create(randomMontaña + 880 , altoPaisaje, "mountain")
+    .create(randomMontaña + 880, altoPaisaje, "mountain")
     .setOrigin(0, 1)
     .refreshBody();
   this.mountain
     .create(randomMontañaPequeña, altoPaisaje, "mountain-small")
     .setOrigin(0, 1)
     .refreshBody();
-
-  //flag
-  this.add.image(1360, altoPaisaje - 4, "flag-base").setOrigin(0, 1);
-  this.add.image(1353, altoPaisaje - 147, "finla-flag").setOrigin(0, 1);
 
   this.bush = this.physics.add.staticGroup();
   this.bush.create(260, 250, "bush").setOrigin(0, 1).refreshBody();
@@ -444,7 +470,7 @@ function create() {
   this.coins.create(100, 200, "coin").anims.play("coin-shine", true);
   this.coins.create(300, 160, "coin").anims.play("coin-shine", true);
 
-  // Definir la función crearTile dentro de create
+  // crear suelos tileados
   function crearTile(x, y, width, height, texture) {
     const tile = this.add.tileSprite(x, y, width, height, texture);
     tile.setOrigin(0, 1);
@@ -452,7 +478,6 @@ function create() {
     return tile;
   }
 
-  // Usar la función crearTile para crear los tiles
   this.tile1 = crearTile.call(
     this,
     0,
@@ -474,47 +499,41 @@ function create() {
   createEnemigos.call(this);
   createBricks.call(this);
   createMisteryBlocks.call(this);
-  marioWalk.call(this);
-  caminarXL.call(this);
-  consumeCoin.call(this);
 
-
-  //implementar fisicas y acciones
-  this.physics.add.overlap(mario, this.coins, consumeCoin, null, this);
-  this.physics.add.collider(mario, this.tile1);
-  this.physics.add.collider(mario, this.tile2);
-  // this.physics.add.collider(mario, this.tile3);
-  // this.physics.add.collider(mario, this.floor);
-  this.physics.add.collider(mario, this.pipe);
-  this.physics.add.collider(mario, this.floorBricks);
-  this.physics.add.collider(mario, this.enemigos, hitGoomba, null, this);
-  // this.physics.add.collider(mario, this.block, hitBlock, null, this);
+  // físicas
+  this.physics.add.overlap(this.mario, this.coins, consumeCoin, null, this);
+  this.physics.add.collider(this.mario, this.tile1);
+  this.physics.add.collider(this.mario, this.tile2);
+  this.physics.add.collider(this.mario, this.pipe);
+  this.physics.add.collider(this.mario, this.floorBricks);
+  this.physics.add.collider(this.mario, this.enemigos, hitGoomba, null, this);
   this.physics.add.collider(
-    mario,
+    this.mario,
     this.misteryBricks,
     hitMisteryBlocks,
     null,
     this
   );
-  this.physics.add.collider(mario, this.bricks, hitBricks, null, this);
+  this.physics.add.collider(this.mario, this.bricks, hitBricks, null, this);
 
-  // tamaño del mundo y camaras
+  // mundo y cámara
   this.physics.world.setBounds(0, 0, 1488, config.height);
   this.cameras.main.setBounds(0, 0, 1528, config.height);
-  this.cameras.main.startFollow(mario);
+  this.cameras.main.startFollow(this.mario); // Solo UNA VEZ aquí
 
+  // teclas
   this.keys = this.input.keyboard.createCursorKeys();
 }
 
 function update() {
-  if (marioEstado == 1) {
+  if (this.marioEstado == 1) {
     caminarXL.call(this);
   } else {
     marioWalk.call(this);
   }
 
-  if (mario.isDead) {
-    mario.anims.play("mario-dead", true);
+  if (this.mario.isDead) {
+    this.mario.anims.play("mario-dead", true);
   }
 }
 new Phaser.Game(config);
