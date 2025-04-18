@@ -489,7 +489,6 @@ function hitKoopa(mario, koopa) {
   });
   
 }
-
 function preload() {
   // cargara elmenetos de la escena
 
