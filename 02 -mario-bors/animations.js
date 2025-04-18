@@ -73,7 +73,7 @@ export const animations = (game) => {
 
 
 
-  //animaciones enemigos 
+  //animaciones goombas 
   game.anims.create({
     key: "goomba-hit",
     frames: [{ key: "goomba", frame: 2 }],
@@ -86,13 +86,21 @@ export const animations = (game) => {
     frames: game.anims.generateFrameNumbers("goomba", { start: 0, end: 1 }),
     frameRate: 3,
     repeat: -1,
-  })
+  });
+  // animaciones koopas
   game.anims.create({
     key: "koopa-walk",
     frames: game.anims.generateFrameNumbers("koopa", { start: 0, end: 1 }),
     frameRate: 7,
     repeat: -1,
-  })
+  });
+  game.anims.create({
+    key: "koopa-hit",
+    frames: game.anims.generateFrameNumbers("koopa-hidden", { start: 0, end: 1 }),
+    frameRate: 7,
+    repeat: 0,
+  });
+ 
   
 
 };

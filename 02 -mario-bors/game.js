@@ -349,7 +349,7 @@ function hitGoomba(mario, goomba) {
     // Mario colisiona con Goomba desde arriba
     goomba.anims.play("goomba-hit", true); // Animación específica para el salto sobre Goomba
 
-    mario.setVelocityY(-170); // Rebote de Mario
+    mario.setVelocityY(-140); // Rebote de Mario
     this.sound.play("goomba-sound", { volume: 5.8 });
     setTimeout(() => {
       mario.anims.play("mario-jump", true);
@@ -367,6 +367,83 @@ function hitGoomba(mario, goomba) {
       this.gameOverSound = true;
     }
 
+    setTimeout(() => {
+      mario.setVelocityY(-285);
+      mario.anims.play("mario-dead", true);
+      mario.setGravityY(500);
+    }, 100);
+    setTimeout(() => {
+      mario.body.checkCollision.none = true;
+    }, 100);
+    setTimeout(() => {
+      this.marioEstado = 0;
+      this.scene.restart();
+    }, 3000);
+  }
+}
+
+function hitKoopa(mario, koopa) {
+  if (mario.body.touching.down && koopa.body.touching.up) {
+    // Mario aplasta a Koopa
+    let x = koopa.x;
+    let y = koopa.y;
+
+    koopa.destroy(); // destruimos al koopa original
+    console.log(this.anims.get("koopa-hit"));
+
+    // Crear el nuevo sprite "koopa-hidden"
+    const koopaHidden = this.physics.add.sprite(x, y, "koopa-hidden");
+    koopaHidden.setOrigin(0, 1); // Ajustar el origen si es necesario
+    koopaHidden.body.allowGravity = true;
+    koopaHidden.setCollideWorldBounds(true); // Permitir gravedad si aplica
+
+    // Reproducir la animación del nuevo sprite
+    koopaHidden.anims.play("koopa-hit", true); // Asegúrate de que esta animación exista
+
+    // Rebote de Mario
+    mario.setVelocityY(-140);
+    this.sound.play("goomba-sound", { volume: 5.8 });
+
+    setTimeout(() => {
+      mario.anims.play("mario-jump", true);
+    }, 50);
+
+  // collisiones de enemigos en  el mundo
+  this.physics.add.collider(koopaHidden, this.tile1);
+  this.physics.add.collider(koopaHidden, this.tile2);
+  this.physics.add.collider(koopaHidden, this.floorBricks);
+  this.physics.add.collider(koopaHidden, this.mario, (koopaHidden, mario) => {
+    if(mario.body.touching.down && koopaHidden.body.touching.up){
+
+      koopaHidden.setVelocityX(140);
+      this.sound.play("goomba-sound", { volume: 5.8 });
+      setTimeout(() => {
+        mario.setVelocityY(-120);
+        
+      }, 20);
+    }
+  }
+);
+  this.physics.add.collider(koopaHidden, this.pipe, (koopaHidden, pipe)=>{
+    if(koopaHidden.body.blocked.right){
+      koopaHidden.setVelocityX(-140);
+      koopaHidden.flipX = false;
+    } 
+    if(koopaHidden.body.blocked.left) {
+      koopaHidden.setVelocityX(140);
+      koopaHidden.flipX = true; 
+    }
+
+  });
+  } else {
+    // Mario se muere
+    mario.isDead = true;
+    koopa.destroy();
+    mario.setCollideWorldBounds(false);
+    if (!this.gameOverSound) {
+      this.sound.add("game-over", { volume: 0.2 }).play();
+      this.gameOverSound = true;
+    }
     setTimeout(() => {
       mario.setVelocityY(-285);
       mario.anims.play("mario-dead", true);
@@ -439,6 +516,11 @@ function preload() {
   this.load.spritesheet("koopa", "assets/entities/koopa.png", {
     frameWidth: 16,
     frameHeight: 16,
+  });
+  this.load.spritesheet("koopa-hidden", "assets/entities/shell.png", {
+    frameWidth: 16,
+    // esta imagen no mide 32x 16 mide 32x15 se modifico el higth a 15
+    frameHeight: 15,
   });
 
   // cargar audios
@@ -535,6 +617,8 @@ function create() {
   this.physics.add.collider(this.mario, this.pipe);
   this.physics.add.collider(this.mario, this.floorBricks);
   this.physics.add.collider(this.mario, this.goombas, hitGoomba, null, this);
+  this.physics.add.collider(this.mario, this.koopas, hitKoopa, null, this);
+  this.physics.add.collider(this.mario, this.koopas);
   this.physics.add.collider(
     this.mario,
     this.misteryBricks,
@@ -543,6 +627,7 @@ function create() {
     this
   );
   this.physics.add.collider(this.mario, this.bricks, hitBricks, null, this);
+
 
   // mundo y cámara
   this.physics.world.setBounds(0, 0, 1488, config.height);
