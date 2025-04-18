@@ -87,5 +87,12 @@ export const animations = (game) => {
     frameRate: 3,
     repeat: -1,
   })
+  game.anims.create({
+    key: "koopa-walk",
+    frames: game.anims.generateFrameNumbers("koopa", { start: 0, end: 1 }),
+    frameRate: 7,
+    repeat: -1,
+  })
+  
 
 };

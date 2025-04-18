@@ -7,9 +7,6 @@ const altoVentana = 280;
 const anchoTile = anchoVnetana;
 const altoTile = altoVentana / 5;
 const empiezaMario = anchoTile / 3;
-
-const mobileDevice = isMobileDevice();
-
 const config = {
   autofocus: false,
   type: Phaser.AUTO,
@@ -30,13 +27,7 @@ const config = {
     },
   },
 };
-function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-}
 
-var goomba;
 var score = 0;
 var marioBloqueado = false;
 var marioAgachado = false;
@@ -59,15 +50,23 @@ function crearMario() {
 function createEnemigos() {
   const VELOCIDAD_INICIAL = 50;
 
-  // Crear un grupo de enemigos
-  this.enemigos = this.physics.add.group({
+  // Crear goombas
+  this.goombas = this.physics.add.group({
     key: "goomba",
     repeat: 8, // número de goombas adicionales
     setXY: { x: anchoVnetana / 3, y: 200, stepX: 190 },
   });
 
-  this.enemigos.children.iterate(function (goomba) {
-    goomba.setOrigin(0, 1);
+  // crear koopas
+  this.koopas = this.physics.add.group({
+    key: "koopa",
+    repeat: 8, // número de koopas adicionales
+    setXY: { x: anchoVnetana / 3, y: 205, stepX: 190 },
+  });
+
+  // movimiento de los kopas y gombas
+  this.goombas.children.iterate(function (goomba) {
+    goomba.setOrigin(0);
     goomba.setGravityY(300);
     goomba.anims.play("goomba-walk");
 
@@ -75,14 +74,39 @@ function createEnemigos() {
     goomba.setVelocityX(direction > 1 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL);
   });
 
-  this.physics.add.collider(this.enemigos, this.tile1);
-  this.physics.add.collider(this.enemigos, this.tile2);
-  this.physics.add.collider(this.enemigos, this.pipe, (enemigos, pipe) => {
-    this.enemigos = enemigos;
-    if (enemigos.body.blocked.down && enemigos.body.blocked.right) {
-      enemigos.setVelocityX(-VELOCIDAD_INICIAL);
-    } else if (enemigos.body.blocked.down && enemigos.body.blocked.left) {
-      enemigos.setVelocityX(VELOCIDAD_INICIAL);
+  this.koopas.children.iterate(function (koopa) {
+    koopa.setOrigin(0, 1);
+    // koopa.setGravityY(300);
+    koopa.anims.play("koopa-walk");
+    let directionKoopas = Phaser.Math.Between(0, 10);
+    koopa.setVelocityX(
+      directionKoopas > 1 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL
+    );
+  });
+
+  //colicionas goombas y koopas
+
+  this.physics.add.collider(this.goombas, this.tile1);
+  this.physics.add.collider(this.goombas, this.tile2);
+  this.physics.add.collider(this.goombas, this.pipe, (goombas, pipe) => {
+    this.goombas = goombas;
+    if (goombas.body.blocked.down && goombas.body.blocked.right) {
+      goombas.setVelocityX(-VELOCIDAD_INICIAL);
+    } else if (goombas.body.blocked.down && goombas.body.blocked.left) {
+      goombas.setVelocityX(VELOCIDAD_INICIAL);
+    }
+  });
+
+  this.physics.add.collider(this.koopas, this.tile1);
+  this.physics.add.collider(this.koopas, this.tile2);
+  this.physics.add.collider(this.koopas, this.pipe, (koopas, pipe) => {
+    this.koopas = koopas;
+    if (koopas.body.blocked.down && koopas.body.blocked.right) {
+      koopas.setVelocityX(-VELOCIDAD_INICIAL);
+      koopas.flipX = false;
+    } else if (koopas.body.blocked.down && koopas.body.blocked.left) {
+      koopas.setVelocityX(VELOCIDAD_INICIAL);
+      koopas.flipX = true;
     }
   });
 }
@@ -211,11 +235,11 @@ function hitMisteryBlocks(mario, misteryBlocks) {
     this.hongo = hongo;
 
     const consumeHongo = (mario, hongo) => {
-      if(this.marioEstado == 1){
+      if (this.marioEstado == 1) {
         hongo.destroy();
         return;
       }
-    
+
       this.sound.play("power-up", { volume: 0.2 });
       mario.anims.play("mario-xl-stop", true);
       hongo.destroy();
@@ -225,7 +249,7 @@ function hitMisteryBlocks(mario, misteryBlocks) {
         mario.body.setOffset(0, mario.height / 2);
         mario.body.setSize(mario.width, mario.height, true);
       }
-      
+
       console.log(this.marioEstado);
     };
     this.physics.add.collider(mario, hongo, consumeHongo, null, this);
@@ -412,6 +436,10 @@ function preload() {
     frameWidth: 16,
     frameHeight: 16,
   });
+  this.load.spritesheet("koopa", "assets/entities/koopa.png", {
+    frameWidth: 16,
+    frameHeight: 16,
+  });
 
   // cargar audios
   iniciarAudios(this);
@@ -506,7 +534,7 @@ function create() {
   this.physics.add.collider(this.mario, this.tile2);
   this.physics.add.collider(this.mario, this.pipe);
   this.physics.add.collider(this.mario, this.floorBricks);
-  this.physics.add.collider(this.mario, this.enemigos, hitGoomba, null, this);
+  this.physics.add.collider(this.mario, this.goombas, hitGoomba, null, this);
   this.physics.add.collider(
     this.mario,
     this.misteryBricks,
