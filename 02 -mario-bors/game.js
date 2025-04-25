@@ -29,14 +29,10 @@ const config = {
 };
 
 var score = 0;
-var marioBloqueado = false;
-var marioAgachado = false;
+
 var emptyBlocksList = [];
 let randomMontaña = Phaser.Math.Between(0, 200);
 let randomMontañaPequeña = Phaser.Math.Between(600, 900);
-let randomPiso = Phaser.Math.Between(520, 450);
-var ramdomMisteryBlocksX = Phaser.Math.Between(430, 480);
-var ramdomMisteryBlocksY = Phaser.Math.Between(180, 190);
 let altoPaisaje = altoVentana - altoTile + 26;
 
 function crearMario() {
