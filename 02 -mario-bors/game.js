@@ -75,8 +75,8 @@ function createEnemigos() {
   // Crear goombas
   this.goombas = this.physics.add.group({
     key: "goomba",
-    repeat: 1, // número de goombas adicionales
-    setXY: { x: anchoVnetana / 3, y: 400, stepX: 190 },
+    repeat: 6, // número de goombas adicionales
+    setXY: { x: anchoVnetana / 3, y: 200, stepX: 190 },
   });
 
   // crear koopas
@@ -93,7 +93,7 @@ function createEnemigos() {
     goomba.anims.play("goomba-walk");
 
     let direction = Phaser.Math.Between(0, 10);
-    goomba.setVelocityX(direction > 1 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL);
+    goomba.setVelocityX(direction > 5 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL);
   });
 
   this.koopas.children.iterate(function (koopa) {
@@ -102,7 +102,7 @@ function createEnemigos() {
     koopa.anims.play("koopa-walk");
     let directionKoopas = Phaser.Math.Between(0, 10);
     koopa.setVelocityX(
-      directionKoopas > 1 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL
+      directionKoopas > 5 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL
     );
   });
 
@@ -114,10 +114,28 @@ function createEnemigos() {
     this.goombas = goombas;
     if (goombas.body.blocked.down && goombas.body.blocked.right) {
       goombas.setVelocityX(-VELOCIDAD_INICIAL);
+      goombas.flipX = false;
     } else if (goombas.body.blocked.down && goombas.body.blocked.left) {
       goombas.setVelocityX(VELOCIDAD_INICIAL);
+      goombas.flipX = true;
     }
   });
+  this.physics.add.collider(this.goombas, this.koopas, (goomba, koopa) => {
+    const VELOCIDAD_INICIAL = 50;
+  
+    if (goomba.body.touching.right && koopa.body.touching.left) {
+      goomba.setVelocityX(-VELOCIDAD_INICIAL);
+      goomba.flipX = false;
+      koopa.setVelocityX(VELOCIDAD_INICIAL);
+      koopa.flipX = true;
+    } else if (goomba.body.touching.left && koopa.body.touching.right) {
+      goomba.setVelocityX(VELOCIDAD_INICIAL);
+      goomba.flipX = true;
+      koopa.setVelocityX(-VELOCIDAD_INICIAL);
+      koopa.flipX = false;
+    }
+  });
+  
 
   this.physics.add.collider(this.koopas, this.tile1);
   this.physics.add.collider(this.koopas, this.tile2);
@@ -131,7 +149,18 @@ function createEnemigos() {
       koopas.flipX = true;
     }
   });
-}
+  this.physics.add.collider(this.koopas, this.goombas, (koopas, goombas)=>{
+    this.koopas = koopas;
+    this.goombas = goombas;
+    if (koopas.body.blocked.down && koopas.body.blocked.rigth) {
+      koopas.setVelocityX(-VELOCIDAD_INICIAL);
+      koopas.flipX = false;
+    } else if (koopas.body.blocked.left && koopas.body.blocked.down) {
+      koopas.setVelocityX(VELOCIDAD_INICIAL);
+      koopas.flipX = true;
+    }     
+  }
+)}
 function createBricks() {
   let randomX = Phaser.Math.Between(670, 674);
   let randomY = Phaser.Math.Between(205, 205);
@@ -394,61 +423,79 @@ function hitKoopa(mario, koopa) {
     let y = koopa.y;
 
     koopa.destroy(); // Eliminamos al koopa normal
-    
 
     // Creamos el caparazón
     const koopaHidden = this.physics.add.sprite(x, y, "koopa-hidden");
     koopaHidden.setOrigin(0, 1);
     koopaHidden.body.allowGravity = true;
     koopaHidden.setCollideWorldBounds(true);
+    koopaHidden.setVelocityX(0);
     koopaHidden.anims.play("koopa-hit", true);
 
     // Rebote inicial de Mario
     mario.setVelocityY(-140);
     this.sound.play("goomba-sound", { volume: 0.2 });
-    let velocidad = 0;
-    console.log("velocidad:", velocidad);
 
-    console.log("velocidad del caparon:", velocidad);
     setTimeout(() => {
       mario.anims.play("mario-jump", true);
     }, 50);
-    // colllider Koppa
-    // this.physics.add.collider(koopa, mario, (koopa, mario)=>{
-    //   koopa.setVelocityX(0);
-    //   matarMario.call(this, mario);
-
-    // });
-    // Colliders KoopaHidden
+   
     this.physics.add.collider(koopaHidden, this.tile1);
     this.physics.add.collider(koopaHidden, this.tile2);
     this.physics.add.collider(koopaHidden, this.floorBricks);
     this.physics.add.collider(koopaHidden, this.mario, (koopaHidden, mario) => {
-      const velocidadX = Math.abs(koopaHidden.body.velocity.x);
-      const estaMoviendose = velocidadX > 0;
-
-      if (mario.body.touching.down && koopaHidden.body.touching.up) {
-        // 🎯 Mario cae encima del caparazón
-        if (!estaMoviendose) {
-          koopaHidden.setVelocityX(140);
-          mario.setVelocityY(-140);
-          this.sound.play("goomba-sound", { volume: 3.2 });
-          return; // 🚨 Importantísimo salir aquí
-        } else {
-          koopaHidden.setVelocityX(0);
-          mario.setVelocityY(-140);
-          this.sound.play("goomba-sound", { volume: 3.2 });
-          return; // 🚨 Importantísimo salir aquí
-        }
-        
+      const caeEncima =
+        mario.body.touching.down && koopaHidden.body.touching.up;
+      const tocaLado = mario.body.touching.left || mario.body.touching.right;
+      let random = Phaser.Math.Between(0, 10);
+      if (random > 5) {
+        random = 140;
+      } else {
+        random = -140;
       }
-      if(koopaHidden.setVelocityX(0)){
-        koopaHidden.setVelocityX(140);
+      console.log(random);
+
+      // Inicializa la propiedad si no existe TOP JAVASCRIP
+      if (typeof koopaHidden.isMoving === "undefined") {
+        koopaHidden.isMoving = false;
+      }
+
+      if (caeEncima) {
+        if (!koopaHidden.isMoving) {
+          // Estaba quieto, lo impulsamos
+          koopaHidden.setVelocityX(random);
+          koopaHidden.isMoving = true;
+        } else {
+          // Ya se movía, lo detenemos
+          koopaHidden.setVelocityX(0);
+          koopaHidden.isMoving = false;
+        }
+
+        mario.setVelocityY(-140);
         this.sound.play("goomba-sound", { volume: 3.2 });
-        return; 
-      } 
-      if (koopaHidden.setVelocityX(140)){
-        matarMario.call(this, mario);
+        return;
+      }
+
+      // Si lo toca de lado
+      if (tocaLado) {
+        const marioTocaDesdeIzquierda = mario.x < koopaHidden.x;
+
+        if (!koopaHidden.isMoving) {
+          // Estaba quieto, lo impulsa hacia la dirección opuesta a Mario
+          const direccion = marioTocaDesdeIzquierda ? 140 : -140;
+          koopaHidden.setVelocityX(direccion);
+          koopaHidden.isMoving = true;
+          this.sound.play("goomba-sound", { volume: 3.2 });
+        } else {
+          // y si se mueve y me toca
+          const seMueveHaciaMario =
+            (koopaHidden.body.velocity.x > 0 && mario.x > koopaHidden.x) ||
+            (koopaHidden.body.velocity.x < 0 && mario.x < koopaHidden.x);
+
+          if (seMueveHaciaMario) {
+            matarMario.call(this, mario);
+          }
+        }
       }
     });
 
@@ -629,6 +676,7 @@ function create() {
   this.physics.add.collider(this.mario, this.floorBricks);
   this.physics.add.collider(this.mario, this.goombas, hitGoomba, null, this);
   this.physics.add.collider(this.mario, this.koopas, hitKoopa, null, this);
+  this.physics.add.collider(this.goombas, this.koopas);
 
   this.physics.add.collider(
     this.mario,
