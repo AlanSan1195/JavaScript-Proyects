@@ -1,16 +1,17 @@
 import { animations } from "./animations.js";
 import { iniciarAudios } from "./audios.js";
 import { marioWalk, caminarXL } from "./controls.js";
+import { createEnemigos } from "./createEnemigos.js";
 
-const anchoVnetana = window.innerWidth;
-const altoVentana = 280;
-const anchoTile = anchoVnetana;
-const altoTile = altoVentana / 5;
-const empiezaMario = anchoTile / 3;
+export const anchoVentana = window.innerWidth;
+export const altoVentana = 280;
+export const anchoTile = anchoVentana;
+export const altoTile = altoVentana / 5;
+export const empiezaMario = anchoTile / 3; 
 const config = {
   autofocus: false,
   type: Phaser.AUTO,
-  width: anchoVnetana,
+  width: anchoVentana,
   height: altoVentana,
   backgroundColor: "#049cd8",
   parent: "game",
@@ -37,7 +38,7 @@ let altoPaisaje = altoVentana - altoTile + 26;
 
 function crearMario() {
   this.mario = this.physics.add
-    .sprite(anchoVnetana / 8, altoTile, "mario-small")
+    .sprite(anchoVentana / 8, altoTile, "mario-small")
 
     .setOrigin(0, 1)
     .setCollideWorldBounds(true)
@@ -65,98 +66,7 @@ function matarMario(mario) {
     this.scene.restart();
   }, 3000);
 }
-function createEnemigos() {
-  const VELOCIDAD_INICIAL = 50;
 
-  // Crear goombas
-  this.goombas = this.physics.add.group({
-    key: "goomba",
-    repeat: 6, // número de goombas adicionales
-    setXY: { x: anchoVnetana / 3, y: 200, stepX: 190 },
-  });
-
-  // crear koopas
-  this.koopas = this.physics.add.group({
-    key: "koopa",
-    repeat: 2, // número de koopas adicionales
-    setXY: { x: anchoVnetana / 3, y: 200, stepX: 300 },
-  });
-
-  // movimiento de los kopas y gombas
-  this.goombas.children.iterate(function (goomba) {
-    goomba.setOrigin(0);
-    goomba.setGravityY(300);
-    goomba.anims.play("goomba-walk");
-
-    let direction = Phaser.Math.Between(0, 10);
-    goomba.setVelocityX(direction > 5 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL);
-  });
-
-  this.koopas.children.iterate(function (koopa) {
-    koopa.setOrigin(0, 1);
-    // koopa.setGravityY(300);
-    koopa.anims.play("koopa-walk");
-    let directionKoopas = Phaser.Math.Between(0, 10);
-    koopa.setVelocityX(
-      directionKoopas > 5 ? -VELOCIDAD_INICIAL : VELOCIDAD_INICIAL
-    );
-  });
-
-  //colicionas goombas y koopas
-
-  this.physics.add.collider(this.goombas, this.tile1);
-  this.physics.add.collider(this.goombas, this.tile2);
-  this.physics.add.collider(this.goombas, this.pipe, (goombas, pipe) => {
-    this.goombas = goombas;
-    if (goombas.body.blocked.down && goombas.body.blocked.right) {
-      goombas.setVelocityX(-VELOCIDAD_INICIAL);
-      goombas.flipX = false;
-    } else if (goombas.body.blocked.down && goombas.body.blocked.left) {
-      goombas.setVelocityX(VELOCIDAD_INICIAL);
-      goombas.flipX = true;
-    }
-  });
-  this.physics.add.collider(this.goombas, this.koopas, (goomba, koopa) => {
-    const VELOCIDAD_INICIAL = 50;
-  
-    if (goomba.body.touching.right && koopa.body.touching.left) {
-      goomba.setVelocityX(-VELOCIDAD_INICIAL);
-      goomba.flipX = false;
-      koopa.setVelocityX(VELOCIDAD_INICIAL);
-      koopa.flipX = true;
-    } else if (goomba.body.touching.left && koopa.body.touching.right) {
-      goomba.setVelocityX(VELOCIDAD_INICIAL);
-      goomba.flipX = true;
-      koopa.setVelocityX(-VELOCIDAD_INICIAL);
-      koopa.flipX = false;
-    }
-  });
-  
-
-  this.physics.add.collider(this.koopas, this.tile1);
-  this.physics.add.collider(this.koopas, this.tile2);
-  this.physics.add.collider(this.koopas, this.pipe, (koopas, pipe) => {
-    this.koopas = koopas;
-    if (koopas.body.blocked.down && koopas.body.blocked.right) {
-      koopas.setVelocityX(-VELOCIDAD_INICIAL);
-      koopas.flipX = false;
-    } else if (koopas.body.blocked.down && koopas.body.blocked.left) {
-      koopas.setVelocityX(VELOCIDAD_INICIAL);
-      koopas.flipX = true;
-    }
-  });
-  this.physics.add.collider(this.koopas, this.goombas, (koopas, goombas)=>{
-    this.koopas = koopas;
-    this.goombas = goombas;
-    if (koopas.body.blocked.down && koopas.body.blocked.rigth) {
-      koopas.setVelocityX(-VELOCIDAD_INICIAL);
-      koopas.flipX = false;
-    } else if (koopas.body.blocked.left && koopas.body.blocked.down) {
-      koopas.setVelocityX(VELOCIDAD_INICIAL);
-      koopas.flipX = true;
-    }     
-  }
-)}
 function createBricks() {
   let randomX = Phaser.Math.Between(670, 674);
   let randomY = Phaser.Math.Between(205, 205);
@@ -358,7 +268,7 @@ function consumeCoin(mario, coin) {
   this.sound.play("coin-sound", { volume: 0.2 });
   const scoreText = this.add.text(coin.x, coin.y, "100", {
     fontFamily: "pixel",
-    fontSize: anchoVnetana / 90,
+    fontSize: anchoVentana / 90,
   });
   score += 100;
   this.tweens.add({
@@ -435,7 +345,7 @@ function hitKoopa(mario, koopa) {
     setTimeout(() => {
       mario.anims.play("mario-jump", true);
     }, 50);
-   
+
     this.physics.add.collider(koopaHidden, this.tile1);
     this.physics.add.collider(koopaHidden, this.tile2);
     this.physics.add.collider(koopaHidden, this.floorBricks);
@@ -660,7 +570,7 @@ function create() {
   );
 
   crearMario.call(this);
-  createEnemigos.call(this);
+  createEnemigos(this, anchoVentana);
   createBricks.call(this);
   createMisteryBlocks.call(this);
 
