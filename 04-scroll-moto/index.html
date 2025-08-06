@@ -41,7 +41,6 @@
         align-items: flex-end;
         justify-content: center;
         animation: showDown 1.2s ease-out;
-        
       }
 
       #img {
@@ -53,7 +52,7 @@
 
       @keyframes showDown {
         0% {
-          transform: translate3d(-50%,-100%, 0);
+          transform: translate3d(-50%, -100%, 0);
           opacity: 0;
         }
         100% {
@@ -70,35 +69,93 @@
       </header>
       <img
         id="imagen"
-        src="/frames/moto-000.webp"
+        src="./frames/moto-000.webp"
         alt="Moto cool"
       />
     </main>
-    <script>
-      let maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
+    <script type="module">
+      import { images } from './images.js';
 
-      const maxFrames = 151;
-
+      let maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const maxFrames = images.length - 1; // 151 frames (0-151)
       const img = document.querySelector("#imagen");
+      let currentFrame = 0;
+      let ticking = false;
+      
+      // Cache de imágenes precargadas
+      const imageCache = new Set();
+      const preloadedImages = new Map();
+      
+      // Preload crítico: primeras y últimas imágenes
+      const preloadCriticalImages = () => {
+        const criticalFrames = [0, 1, 2, 3, 4, 5, maxFrames - 5, maxFrames - 4, maxFrames - 3, maxFrames - 2, maxFrames - 1, maxFrames];
+        
+        criticalFrames.forEach(frame => {
+          if (frame >= 0 && frame <= maxFrames && images[frame]) {
+            const preloadImg = new Image();
+            const src = images[frame].ruta;
+            preloadImg.src = src;
+            preloadedImages.set(frame, preloadImg);
+            imageCache.add(src);
+          }
+        });
+      };
+      
+      // Función optimizada para cambiar frame
+      const updateFrame = () => {
+        const scrollPosition = window.scrollY;
+        const scrollFraction = Math.min(scrollPosition / maxScroll, 1);
+        const targetFrame = Math.floor(scrollFraction * maxFrames);
+        
+        if (targetFrame !== currentFrame && targetFrame >= 0 && targetFrame <= maxFrames) {
+          currentFrame = targetFrame;
+          
+          if (images[currentFrame]) {
+            const newSrc = images[currentFrame].p;
+            
+            // Preload siguiente imagen si no está en cache
+            if (!imageCache.has(newSrc)) {
+              imageCache.add(newSrc);
+              
+              // Preload próximas 3-5 imágenes
+              for (let i = 1; i <= 5; i++) {
+                const nextFrame = currentFrame + i;
+                if (nextFrame <= maxFrames && images[nextFrame]) {
+                  const nextSrc = images[nextFrame].p;
+                  if (!imageCache.has(nextSrc)) {
+                    const preloadImg = new Image();
+                    preloadImg.src = nextSrc;
+                    preloadedImages.set(nextFrame, preloadImg);
+                    imageCache.add(nextSrc);
+                  }
+                }
+              }
+            }
+            
+            img.src = newSrc;
+          }
+        }
+        ticking = false;
+      };
+      
+      // Throttled scroll handler usando requestAnimationFrame
+      const onScroll = () => {
+        if (!ticking) {
+          requestAnimationFrame(updateFrame);
+          ticking = true;
+        }
+      };
 
       window.addEventListener("resize", () => {
         maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       });
-      // paso 2
-      // tenemos que aprender a calcular cual es la distancia en nuestro scroll
-      window.addEventListener("scroll", () => {
-        const scrollPosition = window.scrollY;
-        const scrollFraction = scrollPosition / maxScroll;
-        // ¿ que freame le toca ?
-        // enumeramos los frames
-        const frmaes = Math.floor(scrollFraction * maxFrames) ;
-
-        // creamos el id del nomber de la imagen
-        const id = frmaes.toString().padStart(3, "0");
-
-        img.src = `/frames/moto-${id}.webp`;
-        console.log(id);
+      
+      window.addEventListener("scroll", onScroll, { passive: true });
+      
+      // Inicializar cuando el DOM esté listo
+      document.addEventListener('DOMContentLoaded', () => {
+        preloadCriticalImages();
+        updateFrame(); // Set initial frame
       });
     </script>
   </body>
