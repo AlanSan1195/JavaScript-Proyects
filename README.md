@@ -1,124 +1,38 @@
-<div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="JavaScript Proyectos MiduSan" />
-
-  &#xa0;
-
-  <!-- <a href="https://javascriptproyectosmidusan.netlify.app">Demo</a> -->
+<div align="center">
+  <img src="./assets/banner.png" alt="JavaScript Projects Banner" width="800px"/>
 </div>
 
-<h1 align="center">JavaScript Proyectos Alan San</h1>
+# JavaScript Projects Portfolio
 
-<!-- <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
+> A collection of interactive JavaScript projects built with modern web technologies
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
+## 🎯 About
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8">
+Welcome to my JavaScript projects portfolio! This repository showcases my journey learning JavaScript through hands-on projects. As my first programming language, JavaScript has opened up a magical world of possibilities in web development. I've had the privilege of learning from industry expert Miguel Ángel Durán (Midudev) through his excellent tutorials and streams.
 
-  <img alt="License" src="https://img.shields.io/github/license/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8"> -->
+## 🎮 Projects
 
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8" /> -->
+| # | Project | Description | Code | Demo |
+|---|---------|-------------|------|------|
+| 1 | **Arkanoid Game** 🧱 | A classic brick-breaker arcade game with challenging difficulty. Can you break all 13 blocks? | [![Code](https://img.shields.io/badge/Code-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/main/01%20-arkanold-Game) | [Play Now](https://arkanoidsan.netlify.app/) |
+| 2 | **Super Mario Bros** 🍄 | Recreation of the iconic first level using Phaser.js game engine | [![Code](https://img.shields.io/badge/Code-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/02%20-mario-bors) | [Play Now](https://supermariobrosgame.netlify.app/) |
+| 3 | **Todo List** ✅ | Task management app showcasing JSON handling and LocalStorage | [![Code](https://img.shields.io/badge/Code-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/03%20-to-do-list) | [Try It](https://to-do-listsan.netlify.app/) |
+| 4 | **Moto Scroll** 🏍️ | Interactive scroll-based animation using video frames | [![Code](https://img.shields.io/badge/Code-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/04-scroll-moto) | [View Demo](https://bike-scroll.netlify.app) |
+| 5 | **Stream Chat** 💬 | Simulated streaming chat with future AI integration plans | [![Code](https://img.shields.io/badge/Code-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/05-chat-virtual) | [Try It](https://prismatic-dolphin-f45a1a.netlify.app/) |
 
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8" /> -->
+## 🛠️ Technologies
 
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan?color=56BEB8" /> -->
-</p>
+- JavaScript
+- HTML5
+- CSS3
+- Phaser.js
 
-<!-- Status -->
+## 📋 Requirements
 
-<!-- <h4 align="center"> 
-	🚧  JavaScript Proyectos Alan San 🚀 Under construction...  🚧
-</h4> 
+Before getting started, make sure you have installed:
+- [Git](https://git-scm.com)
+- [Node.js](https://nodejs.org/en/)
 
-<hr> -->
-<!-- 
-<p align="center">
-  <a href="#dart-about">About</a> &#xa0; | &#xa0; 
-  <a href="#sparkles-features">Features</a> &#xa0; | &#xa0;
-  <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
-  <a href="#memo-license">License</a> &#xa0; | &#xa0;
-  <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">Author</a>
-</p> -->
+## 🚀 Quick Start
 
-<br>
-
-## :dart: Acerca de los proyectos ##
-
----
-
-Este repositorio sin duda es mi favorito porque me he divertido y he aprendido bastante 😊. JavaScript es mi primer lenguaje de programación y me parece todo magia ✨. De la mano de un gran docente de la industria, me encaminó con sus enseñanzas el streamer Miguel Ángel Durán, mejor conocido como Midudev, porque en verdad como se aprende. Estos proyectos son porque los he aprendido de su parte y me siento afortunado del tipo de proyectos que se irán agregando 🚀.
-
-
-
-
-## ✨ Demos
-
-| #   | Proyecto          | Descripción                                                              | Código                                                                                                                                                                                    | Website                                                                                                                                                 |
-| --- | ----------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-
-| 1   | **Arkanoid-game** 🧱 | El juego clasico de Arkanoid simple y basicio asi es como se difrutaba tiene una line de difulcutad alta no romeras 13 bloques te lo aseguro          | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/main/01%20-arkanold-Game) | [Demo](https://arkanoidsan.netlify.app/) | 🕹️
-
-<<<<<<< HEAD
-| 2   | **Super-Mario-bros** 🍄 | Estoy clonando el primer nivel del gran Juego Super Mario bros, creado con el motor Phaser de javascrit que nos brida una experiencia de desarrollo muy buena, a diferenciua de cambas simplifica el desarrollo y es facil de enetender | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/02%20-mario-bors) | [Demo](https://alangamebros.netlify.app/) | 🕹️
-=======
-| 2   | **Super-Mario-bros** 🍄 | Estoy clonando el primer nivel del gran Juego Super Mario bros, creado con el motor Phaser de javascrit que nos brida una experiencia de desarrollo muy buena, a diferenciua de cambas simplifica el desarrollo y es facil de enetender | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/02%20-mario-bors) | [Demo](https://supermariobrosgame.netlify.app/) | 🕹️
-
-| 3   | **To-do-List** ✅ | En este proyecto aprendi a entender el JSON que es y como funcionan, tanto .parse y .stringfy, aprendi que es y para que se usa un LocalStorage  | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/03%20-to-do-list) | [Demo](https://to-do-listsan.netlify.app/) | 🕹️
-
-| 4   | **Moto-scroll** ✅ | Un proyecto muy interesante en donde trabajamos con un videop y sus frames y al hacer escroll escucha la posicion del del scroll para sincronizar con los frames y dar como resultado un efecto muy chulo, cosas mas importantes: aprender a calcular el scroll del documento, crear un cuerpo mas amplio para tener un limite de movimiento y el uso dinamico de id para usar el frame adecuado. aprendi bastante en este trabajo fue muy divertido 🏍️ | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/04-scroll-moto) | [Demo](....) | 🕹️
-
-| 5   | **Chat-Stream** ✅ |Me encanta jugar videojuegos paso muchas horas haciendolo y me gustaria sacarle provecho a esto, cree esta simulacion de chat para practicar la Stremeada y aprender a conversar en vivo mientras juego, la idea es escalarlo hasta ingrearle una IA que te arroje comentarios hacerca del juego que estes jugando para que practiques hacer Stream 👾 | [![GitHub Badge](https://img.shields.io/badge/Código-181717?logo=github&logoColor=fff&style=flat-square)](https://github.com/AlanSan1195/JavaScript-Proyects/tree/practicas/05-chat-virtual) | [Demo](https://prismatic-dolphin-f45a1a.netlify.app/) | 🕹️
-
-
-
-🤖
-
-
->>>>>>> practicas
-
-
-## :rocket: Technologias ##
-JavaScript 🧀
-HTML 🥕
-CSS 💙
-Phaser 🕹️
-## :white_check_mark: Requerimientos ##
-
-Antes de empezar :checkered_flag:, deberias tener instalado [Git](https://git-scm.com) y [Node](https://nodejs.org/en/)
-
-## :checkered_flag: Empezando ##
-
-```bash
-# Clone this project
-$ git clone https://github.com/{{YOUR_GITHUB_USERNAME}}/javascript-proyectos-midusan
-
-# Access
-$ cd javascript-proyectos-midusan
-
-
-# Intalar Motor Phaser
-1. Ve a [Phaser](https://phaser.io/download/stable) y descarga el archivo ya minificado `.js` y llévalo a la carpeta del proyecto. No te preocupes, este archivo no se tiene que editar ni nada.
-
-2. Ve a tu archivo `index.html` y en una etiqueta `<script>` agrega la ruta del motor de Phaser, que es el archivo que descargamos.
-
-
-# Instalar dependencias, esta dependencia es solo para el el desarrollo del proyecto 02 de Super Mario Bros que es el motor de JavaScript que utilizamos para su desarrollo
-$ npm install phaser@v3.80.1
-
-# Run the project
-#  La forma en la que corro mis proyectos es usando el Pluguin: Live Preview mi Microsoft, la recomiendo mucho
-
-```
-
-<!-- ## :memo: License ##
-
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file. -->
-
-
-Hecho con :heart: por <a href="https://github.com/AlanSan1195" target="_blank">Alan San</a>
-
-&#xa0;
-
-<a href="#top">Back to top</a>
+1. Clone the repository:
